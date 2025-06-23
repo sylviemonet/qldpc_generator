@@ -1,16 +1,6 @@
 import pytest
 import numpy as np
-from qldpc_generator.code import QLDPCGenerator, HGPGenerator
-
-# Fixture to create a simple HGPGenerator instance
-@pytest.fixture
-def hgp_generator():
-    # Example classical parity-check matrices
-    H1 = np.array([[1, 1, 0], [0, 1, 1]], dtype=int)  # 2x3 matrix, r1=2, n1=3
-    H2 = np.array([[1, 0, 1], [0, 1, 1]], dtype=int)  # 2x3 matrix, r2=2, n2=3
-    n1, k1 = 3, 1  # k1 = n1 - rank(H1) = 3 - 2 = 1
-    n2, k2 = 3, 1  # k2 = n2 - rank(H2) = 3 - 2 = 1
-    return HGPGenerator(n1, k1, H1, n2, k2, H2)
+from qldpc_generator.code import QLDPCGenerator, HGPGenerator, BPGenerator
 
 def test_qldpc_generator_base_class():
     """Test the base QLDPCGenerator class instantiation."""
@@ -21,6 +11,17 @@ def test_qldpc_generator_base_class():
         qldpc.show_code_parameters()
     with pytest.raises(NotImplementedError):
         qldpc.show_parity_matrices()
+
+#============hgp test==========================
+# Fixture to create a simple HGPGenerator instance
+@pytest.fixture
+def hgp_generator():
+    # Example classical parity-check matrices
+    H1 = np.array([[1, 1, 0], [0, 1, 1]], dtype=int)  # 2x3 matrix, r1=2, n1=3
+    H2 = np.array([[1, 0, 1], [0, 1, 1]], dtype=int)  # 2x3 matrix, r2=2, n2=3
+    n1, k1 = 3, 1  # k1 = n1 - rank(H1) = 3 - 2 = 1
+    n2, k2 = 3, 1  # k2 = n2 - rank(H2) = 3 - 2 = 1
+    return HGPGenerator(n1, k1, H1, n2, k2, H2)
 
 def test_hgp_generator_init(hgp_generator):
     """Test initialization of HGPGenerator."""
@@ -97,3 +98,6 @@ def test_invalid_initialization():
     # n1=4 does not match H1 columns (3)
     with pytest.raises(ValueError, match="Number of columns in H does not match n"):
         HGPGenerator(n1=4, k1=1, H1=H1, n2=2, k2=1, H2=H2)
+#============================================
+
+#============bp test=========================
