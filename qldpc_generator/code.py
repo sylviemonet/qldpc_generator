@@ -233,9 +233,9 @@ class BPGenerator(QLDPCGenerator):
         self.r1, _ = H1.shape
         self.r2, _ = H2.shape
         self.H = H
-        self.Hinv = self._calculate_H_inv(self.H)
+        self.Hinv = self.calculate_H_inv(self.H)
     
-    def _calculate_H_inv(self, H):
+    def calculate_H_inv(self, H):
         #TODO: calculate the inverse element of the H group.
         pass
     
@@ -257,49 +257,67 @@ class BPGenerator(QLDPCGenerator):
 
         #Construct the vector spaces by cancelling out the symmetry H
         # C1 \otimes_H C1'
-        L11 =  self._calculate_vector_spaces(self.n1, self.n2, I_n1, I_n2)
+        L11, L11h, L11dict =  self.calculate_vector_spaces_with_h(self.n1, self.n2, I_n1, I_n2, self.H, self.Hinv)
         # C2 \otimes_H C2'
-        L22 =  self._calculate_vector_spaces(self.r1, self.r2, I_r1, I_r2)
+        L22, L22h, L22dict =  self.calculate_vector_spaces_with_h(self.r1, self.r2, I_r1, I_r2, self.H, self.Hinv)
         # C1 \otimes_H C2'
-        L12 =  self._calculate_vector_spaces(self.n1, self.r2, I_n1, I_r2)
+        L12, L12h, L12dict =  self.calculate_vector_spaces_with_h(self.n1, self.r2, I_n1, I_r2, self.H, self.Hinv)
         # C2 \otimes_H C1'
-        L21 =  self._calculate_vector_spaces(self.r1, self.n2, I_r1, I_n2)
+        L21, L21h, L21dict =  self.calculate_vector_spaces_with_h(self.r1, self.n2, I_r1, I_n2, self.H, self.Hinv)
 
         #Calculate the H matrix if it is a HGP code
-        hgp = HGPGenerator(self.n1, self.k1, self.H1, self.n2, self.k2, self.H2)
+        hgp = HGPGenerator(self.n1, self.k1, self.H1, self.n2, self.k2, self.H2, self.H, self.Hinv)
         Hxprime, Hzprime = hgp.get_parity_matrices()
 
         #Construct the final H matrix
-        Hxl = self._calculate_final_H_matrix_from_HGP_H_matrix(Hxprime[:, self.r1*self.n2:], I_n1, I_r1, I_n1, I_r2, L11, L22, L12, L21)
-        Hxr = self._calculate_final_H_matrix_from_HGP_H_matrix(Hxprime[:, :self.r1*self.n2], I_n1, I_r1, I_n2, I_r1, L11, L22, L12, L21)
-        Hzl = self._calculate_final_H_matrix_from_HGP_H_matrix(Hzprime[:, self.r1*self.n2:], I_n1, I_r1, I_n2, I_r2, L11, L22, L12, L21)
-        Hzr = self._calculate_final_H_matrix_from_HGP_H_matrix(Hzprime[:, :self.r1*self.n2], I_n2, I_r1, I_n2, I_r2, L11, L22, L12, L21)
+        Hxl = self.calculate_final_H_matrix_from_HGP_H_matrix(Hxprime[:, self.r1*self.n2:], L11h, L11dict, L21h, L21dict)
+        Hxr = self.calculate_final_H_matrix_from_HGP_H_matrix(Hxprime[:, :self.r1*self.n2], L11h, L11dict, L12h, L12dict)
+        Hzl = self.calculate_final_H_matrix_from_HGP_H_matrix(Hzprime[:, self.r1*self.n2:], L21h, L21dict, L22h, L22dict)
+        Hzr = self.calculate_final_H_matrix_from_HGP_H_matrix(Hzprime[:, :self.r1*self.n2], L12h, L12dict, L22h, L22dict)
         return np.block([Hxl, Hxr]), np.block([Hzl, Hzr])
     
-    def _calculate_vector_spaces(self, p: int, q:int, w: np.ndarray, v: np.ndarray):
+    def calculate_vector_spaces_with_h(p: int, q:int, w: np.ndarray, v: np.ndarray, H: list, Hinv: list):
         L = []
+        L_index = 0
+        Lh = []
+        Lh_index = 0
+        Ldict = {}
         for i in range(p):
             for j in range(q):
-                for h, h_inv in zip(self.H, self.Hinv):
-                    L.append(np.kron(w[i]@h, h_inv@v[j]))
-        return L
+                L.append(np.kron(w[i], v[j]))
+                for h, h_inv in zip(H, Hinv):
+                    current_kron = np.kron(w[i]@h, h_inv@v[j])
+                    matching_index = next((idx for idx, lh in enumerate(Lh) if np.allclose(current_kron, lh)), None)
+                    if matching_index is not None:
+                        Ldict[matching_index].append(L_index)
+                    else:
+                        Lh.append(current_kron)
+                        Ldict[Lh_index] = []
+                        Ldict[Lh_index].append(L_index)
+                        Lh_index += 1
+                L_index += 1
+        return L, Lh, Ldict
     
-    def _calculate_final_H_matrix_from_HGP_H_matrix(self, H: np.ndarray, w: np.ndarray, v: np.ndarray, x: np.ndarray, y: np.ndarray, L11, L22, L12, L21):
-        Hout = np.zeros((self.n1*self.n2, self.r1*self.r2))
-        for i in range(H.shape[0]):
-            for j in range(H.shape[1]):
-                if H[i,j] == 1:
-                    m1, m2, m3, m4 = self._find_the_indices_from_old_indices(i,j)
-                    for k, nk in enumerate(L11+L22):
-                        for l, ml in enumerate(L12+L21):
-                            if (np.kron(w[i]@h, h_inv@v[j]) == nk) and (np.kron(w[i]@h, h_inv@v[j]) == nk):
-                                Hout[k,l] = 1
+    def calculate_final_H_matrix_from_HGP_H_matrix(self, HGPH: np.ndarray, L1H, L1dict, L2H, L2dict):
+        Hout = np.zeros((len(L1H),len(L2H)))
+        for i in range(HGPH.shape[0]):
+            for j in range(HGPH.shape[1]):
+                if HGPH[i,j] == 1:
+                    L1Hindices = self.corresponding_key(i, L1dict)
+                    L2Hindices = self.corresponding_key(j, L2dict)
+                    print(i,j,L1Hindices, L2Hindices)
+                    Hout[L1Hindices,L2Hindices] = 1
         return Hout
+    
+    def corresponding_key(self, val, dictionary):
+            for k, v in dictionary.items():
+                if val in v:
+                    return k
 
     
-    def _find_the_indices_from_old_indices(self, i: int, j: int):
-        m1 = 1
-        m2 = 1
-        m3 = 1
-        m4 = 1
+    def find_the_indices_from_old_indices(self, i: int, j: int, n:int):
+        m1 = i // n
+        m2 = j % n
+        m3 = i // n
+        m4 = j % n
         return m1, m2, m3, m4
