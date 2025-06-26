@@ -209,7 +209,7 @@ class FBGenerator(QLDPCGenerator):
 class BPGenerator(QLDPCGenerator):
     """A child class for generating Balanced Product Codes."""
 
-    def __init__(self, n1, k1, H1, n2, k2, H2, H):
+    def __init__(self, n1, k1, H1, n2, k2, H2T, h1, h2=None):
         """
         Initialize the BP codes.
         
@@ -219,25 +219,35 @@ class BPGenerator(QLDPCGenerator):
             H1 (nd.array): The parity check matrix of the first classical code.
             n2 (int): Length of the second classical code.
             k2 (int): Dimension of the second classical code.
-            H2 (nd.array): The parity check matrix of the second classical code.
-            H (List[nd.array]): The group H is a common symmetry group of the two classical codes.
+            H2T (nd.array): The parity check matrix of the second classical code.
+            h1 (List[nd.array]): The group h1 is a common symmetry group of the two classical codes.
+            h2 (List[nd.array]): The group h1's another size group.
         """
-        self._code_parameter_check(n1, H1)
-        self._code_parameter_check(n2, H2)
+        #TODO: check function
+        # self._code_parameter_check(n1, H1)
+        # self._code_parameter_check(n2, H2T)
         self.n1 = n1
         self.k1 = k1
         self.H1 = H1
         self.n2 = n2
         self.k2 = k2
-        self.H2 = H2
+        self.H2T = H2T
         self.r1, _ = H1.shape
-        self.r2, _ = H2.shape
-        self.H = H
-        self.Hinv = self.calculate_H_inv(self.H)
+        self.r2, _ = H2T.shape
+        self.h1 = h1
+        self.h1inv = self.calculate_H_inv(self.h1)
+        if h2 is None:
+            self.h2 = h1
+            self.h2inv = self.calculate_H_inv(self.h1)
+        else:
+            self.h2 = h2
+            self.h2inv = self.calculate_H_inv(self.h2)
     
     def calculate_H_inv(self, H):
-        #TODO: calculate the inverse element of the H group.
-        pass
+        h_inv = []
+        for h in H:
+            h_inv.append(np.linalg.inv(h))
+        return h_inv
     
     def get_parity_matrices(self):
         """
@@ -250,23 +260,30 @@ class BPGenerator(QLDPCGenerator):
         if self.Hx and self. Hz:
             return self.Hx, self.Hz
         
-        I_n1 = np.eye(self.n1, dtype=int) #C1
-        I_n2 = np.eye(self.n2, dtype=int) #C1'
-        I_r1 = np.eye(self.r1, dtype=int) #C2
-        I_r2 = np.eye(self.r2, dtype=int) #C2'
+        #C2(n1) -> C1(r1) H1 (r1 \times n1)
+        #C2'(r2) -> C1'(n2) H2T (n2 \times r2)
+         
+        I_n1 = np.eye(self.n1, dtype=int) #C2
+        I_r1 = np.eye(self.n2, dtype=int) #C1
+        I_r2 = np.eye(self.r1, dtype=int) #C2'
+        I_n2 = np.eye(self.r2, dtype=int) #C1'
 
-        #Construct the vector spaces by cancelling out the symmetry H
+        #Construct the vector spaces 
+        # L: tensor product
+        # Lh: by cancelling out the symmetry group h
+        # Ldict: the dictionary representing the corresponding information because of the cancelling of h
+    
         # C1 \otimes_H C1'
-        L11, L11h, L11dict =  self.calculate_vector_spaces_with_h(self.n1, self.n2, I_n1, I_n2, self.H, self.Hinv)
+        L11, L11h, L11dict =  self.calculate_vector_spaces_with_h(self.r1, self.n2, I_r1, I_n2)
         # C2 \otimes_H C2'
-        L22, L22h, L22dict =  self.calculate_vector_spaces_with_h(self.r1, self.r2, I_r1, I_r2, self.H, self.Hinv)
+        L22, L22h, L22dict =  self.calculate_vector_spaces_with_h(self.r1, self.r2, I_r1, I_r2)
         # C1 \otimes_H C2'
-        L12, L12h, L12dict =  self.calculate_vector_spaces_with_h(self.n1, self.r2, I_n1, I_r2, self.H, self.Hinv)
+        L12, L12h, L12dict =  self.calculate_vector_spaces_with_h(self.n1, self.r2, I_n1, I_r2)
         # C2 \otimes_H C1'
-        L21, L21h, L21dict =  self.calculate_vector_spaces_with_h(self.r1, self.n2, I_r1, I_n2, self.H, self.Hinv)
+        L21, L21h, L21dict =  self.calculate_vector_spaces_with_h(self.r1, self.n2, I_r1, I_n2)
 
         #Calculate the H matrix if it is a HGP code
-        hgp = HGPGenerator(self.n1, self.k1, self.H1, self.n2, self.k2, self.H2, self.H, self.Hinv)
+        hgp = HGPGenerator(self.n1, self.k1, self.H1, self.n2, self.k2, self.H2T)
         Hxprime, Hzprime = hgp.get_parity_matrices()
 
         #Construct the final H matrix
@@ -276,7 +293,7 @@ class BPGenerator(QLDPCGenerator):
         Hzr = self.calculate_final_H_matrix_from_HGP_H_matrix(Hzprime[:, :self.r1*self.n2], L12h, L12dict, L22h, L22dict)
         return np.block([Hxl, Hxr]), np.block([Hzl, Hzr])
     
-    def calculate_vector_spaces_with_h(p: int, q:int, w: np.ndarray, v: np.ndarray, H: list, Hinv: list):
+    def calculate_vector_spaces_with_h(self, p: int, q:int, w: np.ndarray, v: np.ndarray):
         L = []
         L_index = 0
         Lh = []
