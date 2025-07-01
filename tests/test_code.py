@@ -110,5 +110,8 @@ def bp_generator():
     h1 = [np.array([[1, 0], [0, 1]]), # 身份元
           np.array([[0, 1], [1, 0]])  # 置换矩阵
           ]
-    return BPGenerator(n1, k1, H1, n2, k2, H2T)
+    return BPGenerator(n1, k1, H1, n2, k2, H2T, h1)
+
+def test_bp_parity_check_matrix():
+    
 #============================================
