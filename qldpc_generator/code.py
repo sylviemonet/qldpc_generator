@@ -41,8 +41,8 @@ class HGPGenerator(QLDPCGenerator):
             k2 (int): Dimension of the second classical code.
             H2T (nd.array): The parity check matrix of the second classical code.
         """
-        self._code_parameter_check(n1, H1)
-        self._code_parameter_check(n2, H2T)
+        # self._code_parameter_check(n1, H1)
+        # self._code_parameter_check(n2, H2T)
         self.n1 = n1
         self.k1 = k1
         self.H1 = H1
@@ -54,7 +54,9 @@ class HGPGenerator(QLDPCGenerator):
         self.r1, _ = H1.shape
         _, self.r2 = H2T.shape
         #TODO: distance
-        self.n, self.k = self._calculate_HGP_parameters(n1, k1, H1, n2, k2, H2T)
+        # self.n, self.k = self._calculate_HGP_parameters(n1, k1, H1, n2, k2, H2T)
+        self.HxT = None
+        self.HZ = None
     
     def _code_parameter_check(n, H):
         """
@@ -88,8 +90,8 @@ class HGPGenerator(QLDPCGenerator):
             HxT(nd.array): A parity matrix.
             Hz(nd.array): A parity matrix.
         """
-        if self.Hx and self. Hz:
-            return self.Hx, self.Hz
+        if self.HxT and self. Hz:
+            return self.HxT, self.Hz
         
         I_n1 = np.eye(self.n1, dtype=int)
         I_n2 = np.eye(self.n2, dtype=int)
@@ -98,7 +100,7 @@ class HGPGenerator(QLDPCGenerator):
         
         #HXT = [[H1 \otimes Ir2],[In1 \otimes H2T]]
         #HZ = [Ir1 \otimes H2T, H1 \otimes In2]
-        self.HxT = np.block([np.kron(self.H1, I_r2)], [np.kron(I_n1, self.H2T)])
+        self.HxT = np.block([[np.kron(self.H1, I_r2)], [np.kron(I_n1, self.H2T)]])
         self.Hz = np.block([np.kron(I_r1, self.H2T), np.kron(self.H1, I_n2)])
         return self.HxT, self.Hz
 
@@ -130,6 +132,8 @@ class FBGenerator(QLDPCGenerator):
         self.r1, _ = H1.shape
         self.r2, _ = H2.shape
         self.G = G
+        self.HxT = None
+        self.HZ = None
     
     def get_parity_matrices(self):
         """
@@ -139,8 +143,8 @@ class FBGenerator(QLDPCGenerator):
             Hx(nd.array): A parity matrix.
             Hz(nd.array): A parity matrix.
         """
-        if self.Hx and self. Hz:
-            return self.Hx, self.Hz
+        if self.HxT and self. Hz:
+            return self.HxT, self.Hz
         
         I_n1 = np.eye(self.n1, dtype=int) #fiber vector space 1
         I_n2 = np.eye(self.n2, dtype=int) #fiber vector space 2
@@ -213,7 +217,7 @@ class FBGenerator(QLDPCGenerator):
 class BPGenerator(QLDPCGenerator):
     """A child class for generating Balanced Product Codes."""
 
-    def __init__(self, n1, k1, H1, n2, k2, H2T, h1, h2=None):
+    def __init__(self, n1, k1, H1, n2, k2, H2T, h1, h1inv=None, h2=None):
         """
         Initialize the BP codes.
         
@@ -239,13 +243,18 @@ class BPGenerator(QLDPCGenerator):
         self.r1, _ = H1.shape
         self.r2, _ = H2T.shape
         self.h1 = h1
-        self.h1inv = self.calculate_H_inv(self.h1)
+        if h1inv is None:
+            self.h1inv = self.calculate_H_inv(self.h1)
+        else:
+            self.h1inv = h1inv
         if h2 is None:
             self.h2 = h1
             self.h2inv = self.calculate_H_inv(self.h1)
         else:
             self.h2 = h2
             self.h2inv = self.calculate_H_inv(self.h2)
+        self.HxT = None
+        self.HZ = None
     
     def calculate_H_inv(self, H):
         h_inv = []
@@ -261,16 +270,17 @@ class BPGenerator(QLDPCGenerator):
             Hx(nd.array): A parity matrix.
             Hz(nd.array): A parity matrix.
         """
-        if self.Hx and self. Hz:
-            return self.Hx, self.Hz
+        if self.HxT and self.Hz:
+            return self.HxT, self.Hz
         
         #C2(n1) -> C1(r1) H1 (r1 \times n1)
         #C2'(r2) -> C1'(n2) H2T (n2 \times r2)
          
         I_n1 = np.eye(self.n1, dtype=int) #C2
-        I_r1 = np.eye(self.n2, dtype=int) #C1
-        I_r2 = np.eye(self.r1, dtype=int) #C2'
-        I_n2 = np.eye(self.r2, dtype=int) #C1'
+        I_r1 = np.eye(self.r1, dtype=int) #C1
+        I_r2 = np.eye(self.r2, dtype=int) #C2'
+        I_n2 = np.eye(self.n2, dtype=int) #C1'
+
 
         #Construct the vector spaces 
         # L: tensor product
@@ -279,45 +289,92 @@ class BPGenerator(QLDPCGenerator):
     
         # C1 \otimes_H C1'
         L11, L11h, L11dict =  self.calculate_vector_spaces_with_h(self.r1, self.n2, I_r1, I_n2)
+        print("Ldict11", L11dict)
         # C2 \otimes_H C2'
         L22, L22h, L22dict =  self.calculate_vector_spaces_with_h(self.n1, self.r2, I_n1, I_r2)
+        print("Ldict22", L22dict)
         # C1 \otimes_H C2'
         L12, L12h, L12dict =  self.calculate_vector_spaces_with_h(self.r1, self.r2, I_r1, I_r2)
+        print("Ldict12", L12dict)
         # C2 \otimes_H C1'
         L21, L21h, L21dict =  self.calculate_vector_spaces_with_h(self.n1, self.n2, I_n1, I_n2)
+        print("Ldict21", L21dict)
 
         #Calculate the H matrix if it is a HGP code
         hgp = HGPGenerator(self.n1, self.k1, self.H1, self.n2, self.k2, self.H2T)
         Hxprime, Hzprime = hgp.get_parity_matrices()
 
         #Construct the final H matrix
-        Hxup = self.calculate_final_H_matrix_from_HGP_H_matrix(Hxprime[:self.r1*self.r2, : ], L22h, L22dict, L12h, L12dict)
-        Hxdown = self.calculate_final_H_matrix_from_HGP_H_matrix(Hxprime[self.r1*self.r2:, :], L22h, L22dict, L21h, L21dict)
-        Hzl = self.calculate_final_H_matrix_from_HGP_H_matrix(Hzprime[:, self.r1*self.r2:], L12h, L12dict, L11h, L11dict)
-        Hzr = self.calculate_final_H_matrix_from_HGP_H_matrix(Hzprime[:, :self.r1*self.r2], L21h, L21dict, L11h, L11dict)
-        return np.block([Hxup], [Hxdown]), np.block([Hzl, Hzr])
+        Hxup = self.calculate_final_H_matrix_from_HGP_H_matrix(Hxprime[:self.r1*self.r2], L22h, L22dict, L12h, L12dict)
+        Hxdown = self.calculate_final_H_matrix_from_HGP_H_matrix(Hxprime[self.r1*self.r2:], L22h, L22dict, L21h, L21dict)
+        Hzl = self.calculate_final_H_matrix_from_HGP_H_matrix(Hzprime[:, :self.r1*self.r2], L12h, L12dict, L11h, L11dict)
+        Hzr = self.calculate_final_H_matrix_from_HGP_H_matrix(Hzprime[:, self.r1*self.r2:], L21h, L21dict, L11h, L11dict)
+        return np.block([[Hxup], [Hxdown]]), np.block([Hzl, Hzr])
     
+    def show_easy_func(self, lh_list):
+        numbers = []
+        for j, lh in enumerate(lh_list):
+            if isinstance(lh, np.ndarray):
+                for i, llh in enumerate(lh):
+                    if llh == 1.:
+                        numbers.append(i)
+            else:
+                if lh == 1.:
+                    numbers.append(j)
+        return numbers
+                
+
     def calculate_vector_spaces_with_h(self, p: int, q:int, w: np.ndarray, v: np.ndarray):
         L = []
-        L_index = 0
         Lh = []
-        Lh_index = 0
         Ldict = {}
         for i in range(p):
             for j in range(q):
-                L.append(np.kron(w[i], v[j]))
+                current_L = np.kron(w[i], v[j])
+                L.append(current_L)
+                current_Lh = []
+                #construct Lh
                 for h, h_inv in zip(self.h1, self.h2inv):
                     current_kron = np.kron(w[i]@h, h_inv@v[j].T)
-                    matching_index = next((idx for idx, lh in enumerate(Lh) if np.allclose(current_kron, lh)), None)
-                    if matching_index is not None:
-                        Ldict[matching_index].append(L_index)
-                    else:
-                        Lh.append(current_kron)
-                        Ldict[Lh_index] = []
-                        Ldict[Lh_index].append(L_index)
-                        Lh_index += 1
-                L_index += 1
+                    #找这个kron的结果在不在现有的lh里
+                    # matching_index = next((idx for idx, lh in enumerate(current_Lh) if np.allclose(current_kron, lh)), None)
+                    matching_index = next((idx for idx, lh in enumerate(current_Lh) if (current_kron==lh).all()), None)
+                    if matching_index is None:
+                        #不在的话就加入
+                        current_Lh.append(current_kron)
+                #找这个lh的小list是不是已经存在 没有存在的话就存一下
+                # if next((idx for idx, compare_Lh in enumerate(Lh) if self.two_list_equal(current_Lh, compare_Lh)), None) is None:
+                matching_index = None
+                for idx, compare_Lh in enumerate(Lh):
+                    if set(self.show_easy_func(current_Lh)) == set(self.show_easy_func(compare_Lh)):
+                        matching_index = idx
+                if matching_index is None:
+                    Lh.append(current_Lh)
+        #construct dictionary
+        for l, current_Lh_list in enumerate(Lh):
+            Ldict[l] = []
+            for k, current_L in enumerate(L):
+                flag = False
+                for lh in current_Lh_list:
+                    if np.allclose(current_L, lh):
+                        flag = True
+                if flag:
+                    Ldict[l].append(k)
         return L, Lh, Ldict
+    
+    def two_list_equal(self, list1, list2):
+        if len(list1) != len(list2):
+            return False
+        list1copy = list1.copy()
+        list2copy = list2.copy()
+        for i, list1ele in enumerate(list1):
+            for j, list2ele in enumerate(list2):
+                if (list1ele==list2ele).all():
+                    np.delete(list1copy, i)
+                    np.delete(list2copy, j)
+        if (len(list1copy)==0) & (len(list2copy)==0):
+            return True
+        return False
     
     def calculate_final_H_matrix_from_HGP_H_matrix(self, HGPH: np.ndarray, L1H, L1dict, L2H, L2dict):
         Hout = np.zeros((len(L1H),len(L2H)))
@@ -326,7 +383,6 @@ class BPGenerator(QLDPCGenerator):
                 if HGPH[i,j] == 1:
                     L1Hindices = self.corresponding_key(i, L1dict)
                     L2Hindices = self.corresponding_key(j, L2dict)
-                    print(i,j,L1Hindices, L2Hindices)
                     Hout[L1Hindices,L2Hindices] = 1
         return Hout
     
