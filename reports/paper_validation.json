@@ -1,10 +1,10 @@
 {
   "provenance": {
-    "generated_at": "2026-11-09T09:27:42.235917+00:00",
+    "generated_at": "2026-11-09T09:46:47.067947+00:00",
     "python": "3.14.3",
     "numpy": "2.5.4",
     "sympy": "1.14.0",
-    "git_head": "84e8f67b2f25c81bdc5a92f14c58f72fa9e234a8",
+    "git_head": "058c93755b61efee86386d00f47dbe325fbdb70d",
     "working_tree_dirty": true,
     "source_sha256": {
       "qldpc_generator/__init__.py": "c1899d1366e968f3a49cb33988fb3a7e51bbdc74c4400b116c83b49e0b2dff82",
@@ -17,13 +17,22 @@
       "qldpc_generator/equivalences.py": "48efe5685bc22789e425882217b87628170491c92751d606f33a7a73e1ea4892",
       "qldpc_generator/gf2.py": "1aae4610554a493a20e7c26cdf15e6d99610f071339cff63545ff5c9435d4569",
       "qldpc_generator/helper_func.py": "08c0d0323ce57bb837b37c8c0513f65bce4ea024c2504d34cdd98a5a4b30bf67",
-      "qldpc_generator/paper_cases.py": "d21771937a4a381988ab36728d4405f9cd9a6c3406ac2e38cd9291494c527116",
+      "qldpc_generator/paper_cases.py": "31e29de48512617b027b317632f07898f6685781dae6976ac48b029fc744f397",
       "qldpc_generator/representations.py": "6e47b605b0971e3ddb25ae53136f2cb5f729017bd2937a169ffc16e9263204f5",
       "qldpc_generator/verify_paper.py": "77a4bcf7f2d2d290fc5b03f190a6ede0aac7e1e19ed84b92bff54c3bbcdc292b"
     },
     "paper": {
-      "filename": "clean.tex",
-      "version": "2026-11-07",
+      "title": "An introduction to qLDPC codes from a structural perspective",
+      "authors": [
+        "Yuan Yao",
+        "Guo Zhang",
+        "Yingli Yang",
+        "Yuanye Zhu",
+        "Xiaosi Xu",
+        "Xiao Yuan",
+        "Ying Li"
+      ],
+      "status": "submitted",
       "sha256": "09a2db27ae7e3d15404a0c1fa4e979d2c12857f5eae5d159c385e44f83188e93"
     }
   },

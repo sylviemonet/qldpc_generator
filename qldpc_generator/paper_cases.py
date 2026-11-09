@@ -1,4 +1,8 @@
-"""Transcribed finite inputs from clean.tex (2026-11-07); expectations are separate.
+"""Finite inputs from the submitted paper identified by PAPER_SOURCE.
+
+Yuan Yao, Guo Zhang, Yingli Yang, Yuanye Zhu, Xiaosi Xu, Xiao Yuan, and Ying Li,
+"An introduction to qLDPC codes from a structural perspective." Submitted.
+Expected values are recorded separately from their calculations.
 
 Distance literature values remain reported until an exhaustive calculation or
 a checked logical witness establishes the corresponding statement.
@@ -14,8 +18,13 @@ from .balanced import balanced_product
 from .css import CSSCode
 from .equivalences import Equivalence
 
-PAPER_SOURCE = {"filename": "clean.tex", "version": "2026-11-07",
-                "sha256": "09a2db27ae7e3d15404a0c1fa4e979d2c12857f5eae5d159c385e44f83188e93"}
+PAPER_SOURCE = {
+    "title": "An introduction to qLDPC codes from a structural perspective",
+    "authors": ["Yuan Yao", "Guo Zhang", "Yingli Yang", "Yuanye Zhu",
+                "Xiaosi Xu", "Xiao Yuan", "Ying Li"],
+    "status": "submitted",
+    "sha256": "09a2db27ae7e3d15404a0c1fa4e979d2c12857f5eae5d159c385e44f83188e93",
+}
 
 LP_EXPONENTS = {
     16: [[0,0,0,0,0], [0,2,4,7,11], [0,3,10,14,15]],

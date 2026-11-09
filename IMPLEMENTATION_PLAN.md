@@ -1,51 +1,55 @@
-# 论文验证代码：仓库审计与实施路线
+# Paper validation: repository audit and implementation roadmap
 
-## 原始仓库的实际情况
+This implementation accompanies the submitted paper:
 
-审计基线为 `84e8f67`（2025-07-01，main）。原仓库只有 7 个跟踪文件：空 README、LICENSE、三个库 Python 文件和两个测试文件。没有依赖声明、安装配置、CI 或当前 notebook。历史提交 `bf36c04` 删除过 `qldpc_generator/Untitled.ipynb`；当前树中没有 `example-bp.ipynb`。
+> Yuan Yao, Guo Zhang, Yingli Yang, Yuanye Zhu, Xiaosi Xu, Xiao Yuan, and Ying Li, **“An introduction to qLDPC codes from a structural perspective.”** Submitted.
 
-基线运行结果是 **3 项测试：2 通过、1 失败**。主要问题如下：
+## Original repository
 
-| 位置 | 审计发现 | 影响 / 当前处理 |
+The audit baseline is commit `84e8f67` on main. The original repository had seven tracked files: an empty README, LICENSE, three library Python files, and two test files. It had no dependency declaration, installation configuration, CI workflow, or current notebooks. Commit `bf36c04` had removed `qldpc_generator/Untitled.ipynb`; there was no `example-bp.ipynb` in the baseline tree.
+
+The baseline test run had **three tests: two passed and one failed**.
+
+| Area | Finding | Impact and resolution |
 | --- | --- | --- |
-| HGP 缓存 | 对 NumPy 数组做 `if array` | 重复调用失败；改为显式缓存状态 |
-| HGP 参数 | 未定义 rank、未定义 H2、把转置码维数混为秩 | 改用二元秩及两个转置核维数；加入秩亏测试 |
-| 循环矩阵 | 未周期约化高次项、未约化模 2、移位方向相反 | 加入 Laurent/周期约化与明确方向，迁移说明保留 |
-| BP 边界 | 对整个矩阵遇到项便设为 1，而非单源代表元下 XOR | 偶数阶与重复轨道贡献错误；重写轨道诱导边界 |
-| BP 群作用 | 缺少分度作用、作用律及等变性校验 | 新接口显式区分 C0/C1/D0/D1 与左右作用 |
-| FB | 调用不存在的检查函数，随机 mask 和数组维数不完整 | 重写为每个关联上显式 twist 的链映射 |
-| 验证覆盖 | 只有简单形状和对易性；无距离、商空间、对应关系测试 | 加入独立枚举、Gröbner、显式基重排和负例 |
+| HGP caching | A NumPy array was used directly in `if array` | Repeated calls failed; replaced with explicit cache-state checks |
+| HGP parameters | Undefined rank and H2 references; transpose-code dimensions confused with ranks | Use binary ranks and transpose-kernel dimensions; cover rank-deficient inputs |
+| Circulants | No periodic reduction of high powers, no binary coefficient reduction, opposite shift direction | Add Laurent/periodic reduction and a documented shift convention with migration guidance |
+| BP boundaries | Entries were set to one when encountered, rather than XORed from a single source representative | Incorrect even-order and repeated-orbit contributions; replace the induced-boundary construction |
+| BP actions | No separate actions by chain degree, action-law checks, or equivariance checks | Distinguish C0/C1/D0/D1 and left/right actions explicitly |
+| FB | Missing validation methods and incomplete random masks and array dimensions | Replace with explicit incidence twists satisfying chain-map compatibility |
+| Test coverage | Only basic shape and commutation checks; no distance, quotient, or correspondence tests | Add independent enumeration, Groebner calculations, explicit basis permutations, and negative controls |
 
-## 为什么不能只增加 notebook
+## Library functions and notebooks
 
-构造公式、二元线性代数、群作用和验证证书应放在可复用的库函数里。同一函数同时被测试、命令行报告和 notebook 调用。Notebook 负责说明“输入从哪里来、为什么这样构造、结果代表什么”；自动测试负责在修改后持续检查结论。仅凭 notebook 中一次成功输出，既无法覆盖错误条件，也难以保证各示例使用相同约定。
+Construction formulas, binary linear algebra, group actions, and certificates belong in reusable library functions. Tests, the command-line report, and notebooks call the same functions. Notebooks explain the input data, construction steps, and meaning of the results; automated tests check that later changes preserve those results. A saved notebook output alone cannot cover invalid hypotheses or enforce consistent conventions across examples.
 
-## 本轮实施内容及验收
+## Implementation milestones and acceptance criteria
 
-| 阶段 | 实施内容 | 验收条件 | 状态 |
+| Phase | Implementation | Acceptance criteria | Status |
 | --- | --- | --- | --- |
-| 1. 基础与迁移 | GF(2)、CSS/子系统参数、逻辑基、循环及群代数；保留 HGP/BP 旧返回顺序 | 二元/实数秩区别、空核、边界维数、无效输入、旧接口回归 | 已完成 |
-| 2. 五类构造 | HGP、循环/非交换 LP、LCS、FB、BP、bicycle/GB/BB | 对易、矩形与秩亏输入、两个分度纤维作用、偶数阶轨道抵消 | 已完成 |
-| 3. 对应关系 | LP↔BP、FB↔BP、GB↔互素 BB、BB 单项式平移与直和 | 显式 P0/P1/P2，两套矩阵共享 P1；C2/C4/S3；不满足假设必须拒绝 | 已完成 |
-| 4. 有限实例与证书 | 12 个明确输入实例、5 个精确距离、其他有界搜索 | 与论文独立记录的 N/K/rank 比较；逻辑证书直接校验；不升级文献距离状态 | 已完成本稿可执行范围 |
-| 5. 展示与复现 | 6 个 notebook、JSON 报告、依赖声明和 CI | 所有 notebook 在新内核运行；测试和报告可由单命令重跑 | 本地已完成；远程 CI 尚未触发 |
+| 1. Foundations and migration | GF(2), CSS/subsystem parameters, logical bases, cyclic/group algebra, legacy HGP/BP return order | Binary versus real rank, empty kernels, dimensions, invalid inputs, API regression checks | Implemented |
+| 2. Core constructions | HGP, cyclic/nonabelian LP, LCS, FB, BP, bicycle/GB/BB | Commutation, rectangular and rank-deficient inputs, distinct fiber-degree actions, even-order orbit cancellation | Implemented |
+| 3. Correspondences | LP↔BP, FB↔BP, GB↔coprime BB, BB monomial translations and direct sums | Explicit P0/P1/P2, shared P1 for both matrices, C2/C4/S3 examples, rejection of invalid hypotheses | Implemented |
+| 4. Finite instances and certificates | Twelve specified instances, five exact distances, bounded searches for other instances | Compare N/K/ranks with independently recorded expectations; verify witnesses; preserve literature-only statuses | Implemented for the available inputs |
+| 5. Examples and reproducibility | Six notebooks, JSON report, dependency declarations, CI | Execute notebooks in fresh kernels; rerun tests and reports with documented commands | Implemented; CI results are attached to each run |
 
-核心函数集中于 `constructions.py`、`balanced.py`、`equivalences.py`。论文输入和预期数值放在 `paper_cases.py`，避免测试现算“预期值”。报告使用章节/公式标签，不依赖容易变化的页码。
+Core construction functions are in `constructions.py`, `balanced.py`, and `equivalences.py`. `paper_cases.py` stores the paper inputs and expected values separately from their calculations. Reports refer to section and equation labels rather than page numbers.
 
-## 与论文重点证明的对应
+## Coverage of the main mathematical arguments
 
-- **HGP 距离**：验证 `z=(0,c⊗e_j)` 的核条件、非稳定子性、重量，以及商映射消灭稳定子块但不消灭 z；小例额外穷尽验证 D=3。
-- **LP–BP**：实际建立因子边界及自由作用，逐轨道实现 `k=yx`，比较两个完整校验矩阵。S3、独立基重排和代表元改变测试检查乘法方向与基选择。
-- **FB–BP**：从 twist 建立覆盖复形，以 `[(b,g),f] -> b⊗gf` 重排；包括非自由纤维作用。反向要求自由覆盖因子及所选代表元下的单标签关联。
-- **BP orbit sum**：C2/C4 测试区分“单源代表元”与“对整轨道求和”；另一个负例区分 XOR 与 OR。q=5/6 实例与论文直接列出的折叠矩阵逐元素比较。
-- **BB 逻辑比特数**：GF(2) 秩与 Gröbner 标准单项式计数两条独立路径；t=1..4 的完整矩阵直和重排；基础 BB72 精确距离为 6。
+- **HGP distance:** verify the kernel condition, nonstabilizer property, and weight of `z=(0,c⊗e_j)`. Check that the quotient map kills the stabilizer block but not z. Exhaustively verify D=3 for the small example.
+- **LP–BP:** construct the factor boundaries and free actions, implement `k=yx` on every orbit, and compare both complete check matrices. S3, independent basis relabelling, and alternative representatives test multiplication order and basis choices.
+- **FB–BP:** build the covering complex from the twists and use `[(b,g),f] -> b⊗gf` for the basis map, including nonfree fiber actions. The converse checks the free covering factor and single-group-label incidence hypothesis for the chosen representatives.
+- **BP orbit sums:** C2/C4 cases distinguish a single source representative from a sum over the source orbit. Another control distinguishes XOR from OR. The q=5/6 instances are compared entry by entry with the folded matrices printed in the paper.
+- **BB logical dimension:** compare GF(2) ranks with an independent Groebner standard-monomial count. Verify the complete matrix permutations for t=1..4 direct sums and certify distance six for the BB72 base block.
 
-## 后续具体路线
+## Remaining implementation roadmap
 
-1. **补缺失输入**：从作者或原文配套代码获得 GB126 的多项式、planar88/tile288/tile512 的完整边界数据。保存输入来源与摘要，再加入 `PaperCase`；不能仅按参数反向猜一个码。
-2. **提高大实例距离证据**：优先取得三组 LP 的小重量逻辑算子，验证“零 syndrome、非稳定子、重量不超过所报上界”。这能认证上界，无需先证明最小性。
-3. **再做昂贵的最小距离认证**：BP90/BP108、BB144、mitten150 可接入具有明确最优性/不可满足状态的求解器。超时只报告已有上下界；记录求解器版本和证书。不要把启发式最小值当成精确距离。
-4. **规模化另开性能里程碑**：以正确的有限实例为回归基准，再引入稀疏矩阵、压缩轨道索引与更大群。当前稠密实现优先可核查性，不承诺百万量子比特规模。
-5. **解码/实验复现独立组织**：如果目标扩展到论文的解码阈值或硬件数据，需要固定噪声模型、解码器、采样量及原始实验来源；这些结果不由构造矩阵的测试推出。
+1. **Obtain missing inputs.** Acquire the GB126 polynomials and full boundary data for planar88/tile288/tile512 from the authors or original supplementary code. Record their provenance and checksums, then add `PaperCase` entries. Parameters alone do not specify a code.
+2. **Strengthen the distance evidence for large instances.** First obtain small-weight logical witnesses for the three LP examples. Check zero syndrome, nonmembership in the stabilizer space, and weight at most the reported upper bound. This certifies the upper bound without requiring a proof of minimality.
+3. **Add more expensive minimum-distance certification.** BP90/BP108, BB144, and mitten150 can use solvers with explicit optimality or unsatisfiability outcomes. On timeout, report only established bounds. Record solver versions and certificates; a heuristic minimum is not an exact distance.
+4. **Treat scale as a separate performance milestone.** Retain the finite examples as correctness regressions before introducing sparse matrices, compressed orbit indices, and larger groups. The current dense implementation prioritizes auditability.
+5. **Separate decoder and experimental reproduction.** Reproducing thresholds or hardware results requires specified noise models, decoders, sample counts, and original data. Construction-matrix tests do not establish these claims.
 
-本轮的自动报告明确保留上述未认证状态，后续增加数据与算法时可逐项转为本地认证，无需改动 notebook 的核心构造代码。
+The report preserves unresolved and uncertified statuses explicitly. Future inputs and algorithms can strengthen individual claims without duplicating construction code in notebooks.
