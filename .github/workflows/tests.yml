@@ -1,0 +1,23 @@
+name: Paper validation
+on: [push, pull_request, workflow_dispatch]
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.11', '3.13']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - run: python -m pip install -e '.[test,notebooks]'
+      - run: python -m pytest -q
+      - run: python -m qldpc_generator.verify_paper --output reports/ci_validation.json
+      - run: python scripts/execute_notebooks.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: validation-python-${{ matrix.python-version }}
+          path: |
+            reports/ci_validation.json
+            notebooks/*.ipynb
