@@ -1,0 +1,571 @@
+{
+  "provenance": {
+    "generated_at": "2026-11-09T09:46:47.067947+00:00",
+    "python": "3.14.3",
+    "numpy": "2.5.4",
+    "sympy": "1.14.0",
+    "git_head": "058c93755b61efee86386d00f47dbe325fbdb70d",
+    "working_tree_dirty": true,
+    "source_sha256": {
+      "qldpc_generator/__init__.py": "c1899d1366e968f3a49cb33988fb3a7e51bbdc74c4400b116c83b49e0b2dff82",
+      "qldpc_generator/algebra.py": "6b34dbb559593bd98125410b98edd6fef64956a8742874d45479898fce276924",
+      "qldpc_generator/balanced.py": "c56df10e26eab82c5980610c112a1cd593ba459df99bab971b80609ca3aba804",
+      "qldpc_generator/certificates.py": "88fa2dabf15b6876021e0e9a13c4ba04ee36341c391c88b41e027fbb756492e4",
+      "qldpc_generator/code.py": "f9a3e2c902d5b61a86764c273e7937f4534112d8ce701c0ce905fe72b2481266",
+      "qldpc_generator/constructions.py": "2e1b0a7f68ae3a4b6e8ce8786bd8a240dc71e2255cd24ae47a90411b482c4bb9",
+      "qldpc_generator/css.py": "423c0b604009cd33dc1dbed19c9a9153699657d206b036389323608326287266",
+      "qldpc_generator/equivalences.py": "48efe5685bc22789e425882217b87628170491c92751d606f33a7a73e1ea4892",
+      "qldpc_generator/gf2.py": "1aae4610554a493a20e7c26cdf15e6d99610f071339cff63545ff5c9435d4569",
+      "qldpc_generator/helper_func.py": "08c0d0323ce57bb837b37c8c0513f65bce4ea024c2504d34cdd98a5a4b30bf67",
+      "qldpc_generator/paper_cases.py": "31e29de48512617b027b317632f07898f6685781dae6976ac48b029fc744f397",
+      "qldpc_generator/representations.py": "6e47b605b0971e3ddb25ae53136f2cb5f729017bd2937a169ffc16e9263204f5",
+      "qldpc_generator/verify_paper.py": "77a4bcf7f2d2d290fc5b03f190a6ede0aac7e1e19ed84b92bff54c3bbcdc292b"
+    },
+    "paper": {
+      "title": "An introduction to qLDPC codes from a structural perspective",
+      "authors": [
+        "Yuan Yao",
+        "Guo Zhang",
+        "Yingli Yang",
+        "Yuanye Zhu",
+        "Xiaosi Xu",
+        "Xiao Yuan",
+        "Ying Li"
+      ],
+      "status": "submitted",
+      "sha256": "09a2db27ae7e3d15404a0c1fa4e979d2c12857f5eae5d159c385e44f83188e93"
+    }
+  },
+  "cases": [
+    {
+      "id": "hgp13",
+      "paper_label": "sec:HGP",
+      "source": "tillich2014",
+      "parameters": {
+        "n": 13,
+        "k": 1,
+        "rank_x": 6,
+        "rank_z": 6,
+        "checks_x": 6,
+        "checks_z": 6,
+        "max_row_weight": 4,
+        "max_column_weight": 2
+      },
+      "algebra_verified": true,
+      "distance_claim": {
+        "kind": "exact_finite_claim",
+        "value": 3
+      },
+      "distance_computation": {
+        "status": "exact",
+        "value": 3,
+        "sectors": {
+          "X": {
+            "status": "exact",
+            "value": 3,
+            "lower_bound": 3,
+            "witness": [
+              4,
+              5,
+              6
+            ],
+            "subsets": 57
+          },
+          "Z": {
+            "status": "exact",
+            "value": 3,
+            "lower_bound": 3,
+            "witness": [
+              4,
+              7,
+              10
+            ],
+            "subsets": 59
+          }
+        }
+      },
+      "contradiction_found": false
+    },
+    {
+      "id": "lp544",
+      "paper_label": "app:lp-examples",
+      "source": "xu2024constant",
+      "parameters": {
+        "n": 544,
+        "k": 80,
+        "rank_x": 232,
+        "rank_z": 232,
+        "checks_x": 240,
+        "checks_z": 240,
+        "max_row_weight": 8,
+        "max_column_weight": 5
+      },
+      "algebra_verified": true,
+      "distance_claim": {
+        "kind": "reported_upper_bound",
+        "value": 12
+      },
+      "distance_computation": {
+        "status": "not_searched"
+      },
+      "contradiction_found": false
+    },
+    {
+      "id": "lp714",
+      "paper_label": "app:lp-examples",
+      "source": "xu2024constant",
+      "parameters": {
+        "n": 714,
+        "k": 100,
+        "rank_x": 307,
+        "rank_z": 307,
+        "checks_x": 315,
+        "checks_z": 315,
+        "max_row_weight": 8,
+        "max_column_weight": 5
+      },
+      "algebra_verified": true,
+      "distance_claim": {
+        "kind": "reported_upper_bound",
+        "value": 16
+      },
+      "distance_computation": {
+        "status": "not_searched"
+      },
+      "contradiction_found": false
+    },
+    {
+      "id": "lp1020",
+      "paper_label": "app:lp-examples",
+      "source": "xu2024constant",
+      "parameters": {
+        "n": 1020,
+        "k": 136,
+        "rank_x": 442,
+        "rank_z": 442,
+        "checks_x": 450,
+        "checks_z": 450,
+        "max_row_weight": 8,
+        "max_column_weight": 5
+      },
+      "algebra_verified": true,
+      "distance_claim": {
+        "kind": "reported_upper_bound",
+        "value": 20
+      },
+      "distance_computation": {
+        "status": "not_searched"
+      },
+      "contradiction_found": false
+    },
+    {
+      "id": "lcs52",
+      "paper_label": "app:lcs-details",
+      "source": "old2024lift",
+      "parameters": {
+        "n": 52,
+        "k": 4,
+        "rank_x": 24,
+        "rank_z": 24,
+        "checks_x": 24,
+        "checks_z": 24,
+        "max_row_weight": 6,
+        "max_column_weight": 3
+      },
+      "algebra_verified": true,
+      "distance_claim": {
+        "kind": "exact_finite_claim",
+        "value": 4
+      },
+      "distance_computation": {
+        "status": "exact",
+        "value": 4,
+        "sectors": {
+          "X": {
+            "status": "exact",
+            "value": 4,
+            "lower_bound": 4,
+            "witness": [
+              32,
+              33,
+              34,
+              35
+            ],
+            "subsets": 1379
+          },
+          "Z": {
+            "status": "exact",
+            "value": 4,
+            "lower_bound": 4,
+            "witness": [
+              32,
+              33,
+              34,
+              35
+            ],
+            "subsets": 1379
+          }
+        }
+      },
+      "contradiction_found": false
+    },
+    {
+      "id": "bp90",
+      "paper_label": "app:bp-examples",
+      "source": "tiew2024lowoverheadentanglinggatesgeneralised",
+      "parameters": {
+        "n": 90,
+        "k": 8,
+        "rank_x": 41,
+        "rank_z": 41,
+        "checks_x": 45,
+        "checks_z": 45,
+        "max_row_weight": 6,
+        "max_column_weight": 3
+      },
+      "algebra_verified": true,
+      "distance_claim": {
+        "kind": "reported",
+        "value": 10
+      },
+      "distance_computation": {
+        "status": "bounded",
+        "lower_bound": 7,
+        "upper_bound": null,
+        "sectors": {
+          "X": {
+            "status": "lower_bound",
+            "lower_bound": 7,
+            "checked_through": 6,
+            "subsets": 121576,
+            "stop_reason": "weight_limit"
+          },
+          "Z": {
+            "status": "lower_bound",
+            "lower_bound": 7,
+            "checked_through": 6,
+            "subsets": 121576,
+            "stop_reason": "weight_limit"
+          }
+        }
+      },
+      "contradiction_found": false
+    },
+    {
+      "id": "bp108",
+      "paper_label": "app:bp-examples",
+      "source": "tiew2024lowoverheadentanglinggatesgeneralised",
+      "parameters": {
+        "n": 108,
+        "k": 8,
+        "rank_x": 50,
+        "rank_z": 50,
+        "checks_x": 54,
+        "checks_z": 54,
+        "max_row_weight": 6,
+        "max_column_weight": 3
+      },
+      "algebra_verified": true,
+      "distance_claim": {
+        "kind": "reported",
+        "value": 8
+      },
+      "distance_computation": {
+        "status": "bounded",
+        "lower_bound": 7,
+        "upper_bound": null,
+        "sectors": {
+          "X": {
+            "status": "lower_bound",
+            "lower_bound": 7,
+            "checked_through": 6,
+            "subsets": 210043,
+            "stop_reason": "weight_limit"
+          },
+          "Z": {
+            "status": "lower_bound",
+            "lower_bound": 7,
+            "checked_through": 6,
+            "subsets": 210043,
+            "stop_reason": "weight_limit"
+          }
+        }
+      },
+      "contradiction_found": false
+    },
+    {
+      "id": "bicycle6",
+      "paper_label": "sec:BB",
+      "source": "mackay2004sparse",
+      "parameters": {
+        "n": 6,
+        "k": 2,
+        "rank_x": 2,
+        "rank_z": 2,
+        "checks_x": 3,
+        "checks_z": 3,
+        "max_row_weight": 4,
+        "max_column_weight": 2
+      },
+      "algebra_verified": true,
+      "distance_claim": {
+        "kind": "exact_finite_claim",
+        "value": 2
+      },
+      "distance_computation": {
+        "status": "exact",
+        "value": 2,
+        "sectors": {
+          "X": {
+            "status": "exact",
+            "value": 2,
+            "lower_bound": 2,
+            "witness": [
+              2,
+              3
+            ],
+            "subsets": 7
+          },
+          "Z": {
+            "status": "exact",
+            "value": 2,
+            "lower_bound": 2,
+            "witness": [
+              2,
+              3
+            ],
+            "subsets": 7
+          }
+        }
+      },
+      "contradiction_found": false
+    },
+    {
+      "id": "gb48",
+      "paper_label": "sec:BB",
+      "source": "panteleev2021degenerate",
+      "parameters": {
+        "n": 48,
+        "k": 6,
+        "rank_x": 21,
+        "rank_z": 21,
+        "checks_x": 24,
+        "checks_z": 24,
+        "max_row_weight": 8,
+        "max_column_weight": 4
+      },
+      "algebra_verified": true,
+      "distance_claim": {
+        "kind": "reported",
+        "value": 8
+      },
+      "distance_computation": {
+        "status": "exact",
+        "value": 8,
+        "sectors": {
+          "X": {
+            "status": "exact",
+            "value": 8,
+            "lower_bound": 8,
+            "witness": [
+              0,
+              1,
+              2,
+              5,
+              15,
+              31,
+              40,
+              41
+            ],
+            "subsets": 213053
+          },
+          "Z": {
+            "status": "exact",
+            "value": 8,
+            "lower_bound": 8,
+            "witness": [
+              0,
+              1,
+              4,
+              17,
+              24,
+              25,
+              37,
+              40
+            ],
+            "subsets": 213053
+          }
+        }
+      },
+      "contradiction_found": false
+    },
+    {
+      "id": "bb72",
+      "paper_label": "eq:bb-logical-qubit-quotient",
+      "source": "bravyi2024high",
+      "parameters": {
+        "n": 72,
+        "k": 12,
+        "rank_x": 30,
+        "rank_z": 30,
+        "checks_x": 36,
+        "checks_z": 36,
+        "max_row_weight": 6,
+        "max_column_weight": 3
+      },
+      "algebra_verified": true,
+      "distance_claim": {
+        "kind": "reported",
+        "value": 6
+      },
+      "distance_computation": {
+        "status": "exact",
+        "value": 6,
+        "sectors": {
+          "X": {
+            "status": "exact",
+            "value": 6,
+            "lower_bound": 6,
+            "witness": [
+              0,
+              3,
+              6,
+              15,
+              24,
+              30
+            ],
+            "subsets": 62269
+          },
+          "Z": {
+            "status": "exact",
+            "value": 6,
+            "lower_bound": 6,
+            "witness": [
+              0,
+              1,
+              2,
+              3,
+              19,
+              23
+            ],
+            "subsets": 62269
+          }
+        }
+      },
+      "contradiction_found": false
+    },
+    {
+      "id": "bb144",
+      "paper_label": "eq:fg",
+      "source": "bravyi2024high",
+      "parameters": {
+        "n": 144,
+        "k": 12,
+        "rank_x": 66,
+        "rank_z": 66,
+        "checks_x": 72,
+        "checks_z": 72,
+        "max_row_weight": 6,
+        "max_column_weight": 3
+      },
+      "algebra_verified": true,
+      "distance_claim": {
+        "kind": "reported",
+        "value": 12
+      },
+      "distance_computation": {
+        "status": "bounded",
+        "lower_bound": 7,
+        "upper_bound": null,
+        "sectors": {
+          "X": {
+            "status": "lower_bound",
+            "lower_bound": 7,
+            "checked_through": 6,
+            "subsets": 497785,
+            "stop_reason": "weight_limit"
+          },
+          "Z": {
+            "status": "lower_bound",
+            "lower_bound": 7,
+            "checked_through": 6,
+            "subsets": 497785,
+            "stop_reason": "weight_limit"
+          }
+        }
+      },
+      "contradiction_found": false
+    },
+    {
+      "id": "mitten150",
+      "paper_label": "eq:mitten-regular-checks",
+      "source": "bhardwaj2026highrate",
+      "parameters": {
+        "n": 150,
+        "k": 30,
+        "rank_x": 60,
+        "rank_z": 60,
+        "checks_x": 60,
+        "checks_z": 60,
+        "max_row_weight": 9,
+        "max_column_weight": 6
+      },
+      "algebra_verified": true,
+      "distance_claim": {
+        "kind": "reported",
+        "value": 10
+      },
+      "distance_computation": {
+        "status": "bounded",
+        "lower_bound": 7,
+        "upper_bound": null,
+        "sectors": {
+          "X": {
+            "status": "lower_bound",
+            "lower_bound": 7,
+            "checked_through": 6,
+            "subsets": 562626,
+            "stop_reason": "weight_limit"
+          },
+          "Z": {
+            "status": "lower_bound",
+            "lower_bound": 7,
+            "checked_through": 6,
+            "subsets": 562626,
+            "stop_reason": "weight_limit"
+          }
+        }
+      },
+      "contradiction_found": false
+    }
+  ],
+  "relations": {
+    "lp_bp_C2": true,
+    "lp_bp_C4": true,
+    "lp_bp_S3": true,
+    "fb_bp_S3_nonfree_fiber": true,
+    "bb_direct_sum_t3": true,
+    "bb144_quotient_dimension": true,
+    "bb144_generalized_toric": true,
+    "hgp_distance_quotient_witness": true,
+    "classical_path_star_soundness": true
+  },
+  "passed": true,
+  "meaning_of_passed": "All executed algebra/certificate checks passed; reported or not_searched distance claims are not certified.",
+  "unresolved_inputs": [
+    {
+      "claim": "GB [[126,28,8]]",
+      "reason": "Paper mentions parameters but does not specify its two polynomials."
+    },
+    {
+      "claim": "Planar [[88,6,6]] and tile [[288,8,12]], [[512,18,19]]",
+      "reason": "Full open-boundary check data are not supplied in this manuscript; periodic templates do not determine them."
+    }
+  ],
+  "outside_finite_validation": [
+    "General asymptotic rate/distance theorems",
+    "General LCS distance conjecture",
+    "Decoder thresholds and single-shot guarantees",
+    "Hardware experimental results"
+  ]
+}

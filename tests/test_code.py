@@ -54,8 +54,8 @@ def bp_generator():
     H2T = np.array([[1, 0, 1], [0, 1, 1]], dtype=int)  # 2x3 matrix, r2=2, n2=3
     n1, k1 = 3, 1  # k1 = n1 - rank(H1) = 3 - 2 = 1
     n2, k2 = 3, 1  # k2 = n2 - rank(H2) = 3 - 2 = 1
-    h1 = [np.array([[1, 0], [0, 1]]), # 身份元
-          np.array([[0, 1], [1, 0]])  # 置换矩阵
+    h1 = [np.array([[1, 0], [0, 1]]), # Identity element
+          np.array([[0, 1], [1, 0]])  # Permutation matrix
           ]
     return BPGenerator(n1, k1, H1, n2, k2, H2T, h1)
 
