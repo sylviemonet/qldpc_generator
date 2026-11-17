@@ -8,11 +8,32 @@ The paper citation and manuscript checksum are recorded in `paper_cases.PAPER_SO
 
 The project has three layers: **library functions implement constructions and calculations, automated tests verify them, and notebooks explain and demonstrate them.** Notebooks call the library rather than maintain separate copies of the algorithms.
 
+## Start here: a reader's guide
+
+Open [06 — Paper coverage and validation](notebooks/06-paper-validation.ipynb) first. Its tables place each paper distance claim beside the result actually computed here, then identify the correspondence checks and missing inputs. Saved outputs are included; running a notebook regenerates its results.
+
+For the main proof checks, continue with **01 (HGP distance)** and **04 (LP–BP / FB–BP)**. For a construction-by-construction introduction, follow **01 → 02 → 03 → 04 → 05**. The assumed background is binary linear algebra and CSS codes. Each walkthrough states its inputs and hypotheses, gives locally numbered equations, displays intermediate results, and includes failure controls.
+
+| Walkthrough | Paper location | What the reader can inspect |
+| --- | --- | --- |
+| [01 — HGP and distance](notebooks/01-hgp-and-distance.ipynb) | Sec. V, Eq. (44) and distance argument | Complete [[13,1,3]] matrices; quotient map; a zero-syndrome stabilizer as a failure control; upper bound versus exact distance |
+| [02 — LP and LCS](notebooks/02-lp-lcs.ipynb) | Definition 4; Apps. D, G.1–G.2 | All three LP seed matrices; adjoint versus plain transpose; shared lift coordinates; explicit LCS input and [[52,4,4]] certificate |
+| [03 — BP orbit bases](notebooks/03-example-bp.ipynb) | Sec. VIII; Apps. G.4–G.5, Algorithm 2 | Source-to-target orbit trace; two incorrect counting rules; BP90/BP108 inputs and independent folded matrices |
+| [04 — LP–BP and FB–BP](notebooks/04-fb-and-correspondences.ipynb) | App. F, Propositions 1–2; App. E, Eq. (E9) | Maps on whole orbits; both boundary residuals; a wrong-order map concealed by default representatives; converse hypotheses |
+| [05 — Bicycle and BB](notebooks/05-bicycle-bb.ipynb) | Sec. IX, Eqs. (90), (93)–(94) | Polynomial quotient basis; binary ranks; distinction between BB144 and a length-144 direct sum; optional translations and boundary examples |
+| [06 — Coverage and results](notebooks/06-paper-validation.ipynb) | Locations linked above; App. G.6 for the optional soundness example | Paper claims versus local certificates/bounds, relation checks, missing data, and reproducibility commands |
+
+Paper numbering refers to the manuscript identified by `PAPER_SOURCE`; notebooks also retain stable LaTeX source labels for later revisions. Their own equation numbers restart in each notebook and are explicitly distinguished from paper numbers.
+
+The default report has **five exact finite distances, four distance lower bounds, and three instances with no local distance search**. All 12 have matrix/rank checks. A passing report does not certify every statement discussed in the review; see [scope and missing inputs](#scope-and-missing-inputs).
+
 ## Installation and execution
 
-Use Python 3.10 or newer:
+Use Python 3.10 or newer. Clone the repository (with GitHub access if it is private), then run from its root. If you already have a checkout, start with the virtual-environment command:
 
 ```bash
+git clone https://github.com/sylviemonet/qldpc_generator.git
+cd qldpc_generator
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -e '.[test,notebooks]'
@@ -21,7 +42,17 @@ python -m qldpc_generator.verify_paper
 python scripts/execute_notebooks.py
 ```
 
-The last command executes each notebook in a separate Jupyter kernel and saves its outputs. If JupyterLab is already installed, you can also open `notebooks/` interactively. Installing this project does not install JupyterLab itself.
+The last command executes each notebook in a fresh Jupyter kernel **using the Python interpreter that invoked the script**, prints its elapsed time, and saves its outputs. It stops on a cell error. This avoids accidentally running an unrelated globally installed `python3` kernel.
+
+For interactive use, open `notebooks/` in JupyterLab or a notebook editor and select the environment where this project was installed. Installing this project's notebook dependencies does not install the JupyterLab application. If needed, install it and register a clearly named kernel from the active environment:
+
+```bash
+python -m pip install jupyterlab
+python -m ipykernel install --user --name qldpc-generator --display-name "Python (qldpc-generator)"
+python -m jupyterlab
+```
+
+Choose **Python (qldpc-generator)** and run all cells from the top. Each notebook is independent; no previous notebook's variables are needed. Notebook 06 also offers a `RUN_DISTANCE_SEARCH = False` switch for an algebra-only overview. Default examples are small; raising distance limits can be exponentially expensive.
 
 The validation report is written to `reports/paper_validation.json`. Use `--output PATH` to select another location, or `--skip-distance` to run only the algebraic and correspondence checks. The report records software versions, source-code hashes, the paper citation, individual results, and logical-operator witnesses for certified distances.
 
@@ -91,15 +122,6 @@ The original `FBGenerator` was a nonfunctional random-twist prototype. Its repla
 The default report certifies exact distances of 3 for HGP13, 4 for LCS52, 2 for bicycle6, 8 for GB48, and 6 for BB72. For BP90, BP108, BB144, and mitten150, it excludes logical operators of weight at most six and reports D>=7. For the three large LP instances, it independently checks the matrices, ranks, and K; the cited distance upper bounds do not yet have local certificates.
 
 Search stops before exceeding the subset budget and reports `checked_through` and the stopping reason. Raising the weight limit can have exponential cost. Failure to find a logical operator within a bounded search does not imply that none exists.
-
-## Example notebooks
-
-1. [HGP and the distance argument](notebooks/01-hgp-and-distance.ipynb)
-2. [LP, LCS, and the order of lifting](notebooks/02-lp-lcs.ipynb)
-3. [BP orbits and finite instances](notebooks/03-example-bp.ipynb)
-4. [FB, LP–BP, and FB–BP correspondences](notebooks/04-fb-and-correspondences.ipynb)
-5. [Bicycle codes, BB quotient dimensions, and direct sums](notebooks/05-bicycle-bb.ipynb)
-6. [Paper validation summary](notebooks/06-paper-validation.ipynb)
 
 ## Scope and missing inputs
 
