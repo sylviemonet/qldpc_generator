@@ -56,7 +56,8 @@ class CSSCode:
             return self.hz, self.hx
         raise ValueError("sector must be X or Z")
 
-    def distance(self, max_weight=6, max_subsets=1_000_000):
+    def distance(self, max_weight=None, max_subsets=None, *, method="mitm",
+                 time_limit=None, threads=None, solver_log=False):
         """Meet-in-the-middle exhaustive search, with explicit stopping bounds.
 
         A collision of equal check syndromes with unequal stabilizer-quotient
@@ -64,7 +65,23 @@ class CSSCode:
         subsets of size t with sizes <=t-1; to certify 2t, also compare size t
         pairs. Repeated signatures can be discarded without losing existence.
         ``max_subsets`` bounds enumerated subsets per sector, not elapsed time.
+        The default method is ``mitm`` (weight 6, one million subsets).
+        Use ``method='gurobi'`` for unrestricted-weight MILP minimization with
+        a time limit per sector (default 60 seconds) and optional thread count.
+        Gurobi is optional; requesting it never silently falls back to MITM.
         """
+        if method == "gurobi":
+            if max_weight is not None or max_subsets is not None:
+                raise ValueError("Gurobi minimizes over all weights; use time_limit, not MITM budgets")
+            from .gurobi_distance import gurobi_distance
+            return gurobi_distance(self, time_limit=60 if time_limit is None else time_limit,
+                                   threads=1 if threads is None else threads, solver_log=solver_log)
+        if method != "mitm":
+            raise ValueError("method must be mitm or gurobi")
+        if time_limit is not None or threads is not None or solver_log:
+            raise ValueError("time_limit, threads, and solver_log apply only to method='gurobi'")
+        max_weight = 6 if max_weight is None else max_weight
+        max_subsets = 1_000_000 if max_subsets is None else max_subsets
         if not isinstance(max_weight, int) or max_weight < 0 or max_subsets < 1:
             raise ValueError("Use a nonnegative weight and positive subset budget")
         if self.k == 0:

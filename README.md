@@ -22,6 +22,7 @@ For the main proof checks, continue with **01 (HGP distance)** and **04 (LP–BP
 | [04 — LP–BP and FB–BP](notebooks/04-fb-and-correspondences.ipynb) | App. F, Propositions 1–2; App. E, Eq. (E9) | Maps on whole orbits; both boundary residuals; a wrong-order map concealed by default representatives; converse hypotheses |
 | [05 — Bicycle and BB](notebooks/05-bicycle-bb.ipynb) | Sec. IX, Eqs. (90), (93)–(94) | Polynomial quotient basis; binary ranks; distinction between BB144 and a length-144 direct sum; optional translations and boundary examples |
 | [06 — Coverage and results](notebooks/06-paper-validation.ipynb) | Locations linked above; App. G.6 for the optional soundness example | Paper claims versus local certificates/bounds, relation checks, missing data, and reproducibility commands |
+| [07 — Gurobi distance](notebooks/07-gurobi-distance.ipynb) | CSS logical quotient in Sec. II.C | MILP formulation, independent MITM comparisons, optimality bounds, and a zero-time-limit control |
 
 Paper numbering refers to the manuscript identified by `PAPER_SOURCE`; notebooks also retain stable LaTeX source labels for later revisions. Their own equation numbers restart in each notebook and are explicitly distinguished from paper numbers.
 
@@ -110,12 +111,43 @@ The original `FBGenerator` was a nonfunctional random-twist prototype. Its repla
 
 ## Interpreting distance results
 
+### Gurobi: minimize distance over all weights
+
+For larger instances, use the optional Gurobi backend. It solves separate X/Z mixed-integer linear programs, excludes the entire stabilizer space using logical parity constraints, and returns the smaller sector distance. It can find logical witnesses beyond the default enumeration budget, although proving optimality may still be expensive and it is not faster on every input.
+
+```bash
+python -m pip install -e '.[gurobi]'
+python -m qldpc_generator.verify_paper --distance-method gurobi --time-limit 60 --threads 1 --output reports/gurobi_validation.json
+# Or select specific instances:
+python -m qldpc_generator.verify_paper --distance-method gurobi --cases bp90 bp108 bb144 --time-limit 60 --output reports/gurobi_selected.json
+```
+
+```python
+from qldpc_generator.paper_cases import cyclic_bp_case
+code = cyclic_bp_case(6).code
+result = code.distance(method="gurobi", time_limit=60, threads=1)
+print(result)  # Inspect status and bounds; an incumbent is not necessarily optimal.
+```
+
+`time_limit` is seconds **per sector**, excluding model construction, so a code can take about twice that limit plus setup. Gurobi minimizes over all weights; MITM's `max_weight` and `max_subsets` arguments are rejected when `method="gurobi"`. The default remains `method="mitm"` for installations without Gurobi. Selection is explicit and license failures never silently switch algorithms.
+
+Each Gurobi sector records its status, lower/upper bounds, logical support, witness source, runtime, model size, and solver termination status. A checked logical-basis row supplies a warm start and an upper bound even when no incumbent is accepted. Returned incumbents are rechecked with binary syndrome and stabilizer-membership calculations. `exact` requires matching bounds, with both MIP gap tolerances set to zero. Solver lower bounds rely on Gurobi's numerical optimality machinery; they are not independently checkable infeasibility proofs. A time limit normally gives `bounded`, and a solver/package/license error gives `unavailable` in reports, a failing exit status, and the reason.
+
+The package requires a Gurobi license suitable for the model size. The pip distribution includes a restricted license for small models; larger problems can require an academic or commercial license. See Gurobi's [installation instructions](https://support.gurobi.com/hc/en-us/articles/360044290292-How-do-I-install-Gurobi-for-Python) and [size-limited license guidance](https://support.gurobi.com/hc/en-us/articles/360051597492-How-do-I-resolve-a-Model-too-large-for-size-limited-Gurobi-license-error). Do not put license files or keys in the repository.
+
+[Notebook 07](notebooks/07-gurobi-distance.ipynb) gives the numbered MILP equations, a comparison with enumeration, and an explicit timeout example. Notebook 06 can use it by setting `DISTANCE_METHOD = "gurobi"`. The committed [Gurobi report](reports/gurobi_validation.json) records a finite run with a 10-second limit per sector; its conclusions are separate from the default MITM report.
+
+That recorded run has seven exact distances, including BP90 with D=10 and BP108 with D=8. It also supplies checked LP upper bounds of 12, 16, and 18 for LP544, LP714, and LP1020. The other results remain bounded. Neither backend dominates every bound: for example, the saved MITM run establishes a stronger lower bound for mitten150 than this time-limited Gurobi run. Compare the evidence in both reports rather than replacing a stronger bound by a weaker one.
+
+### MITM: bounded exhaustive enumeration
+
 `CSSCode.distance(max_weight, max_subsets)` performs an exhaustive meet-in-the-middle collision search. Equal check syndromes with unequal stabilizer-quotient signatures identify a nontrivial logical operator. Exhaustion of all smaller supports establishes minimality. Tests cross-check this algorithm against an independent full-space enumeration on small codes.
 
 - `exact`: smaller weights have been excluded and a logical witness has been found for this finite instance. This does not prove a statement for an entire family.
 - `bounded`: only a lower bound, or combined lower and upper bounds from the two sectors, has been established.
 - `no_logicals`: K=0, so there is no finite nontrivial logical distance.
 - `not_searched`: no distance search was performed in this run.
+- `unavailable`: the requested Gurobi backend could not run; the report fails and explains why.
 - `reported` / `reported_upper_bound`: a literature value quoted by the paper, stored separately in `distance_claim`; it is not automatically a result certified by this program.
 - The general LCS distance expression retains the status `conjectured` in the construction metadata.
 
