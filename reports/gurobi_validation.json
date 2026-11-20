@@ -1,0 +1,1080 @@
+{
+  "provenance": {
+    "generated_at": "2026-11-20T06:41:27.394866+00:00",
+    "python": "3.14.3",
+    "numpy": "2.5.4",
+    "sympy": "1.14.0",
+    "git_head": "e3c5a9051bbe0134aeb84d45fb8ff8947daee75c",
+    "working_tree_dirty": true,
+    "source_sha256": {
+      "qldpc_generator/__init__.py": "c1899d1366e968f3a49cb33988fb3a7e51bbdc74c4400b116c83b49e0b2dff82",
+      "qldpc_generator/algebra.py": "6b34dbb559593bd98125410b98edd6fef64956a8742874d45479898fce276924",
+      "qldpc_generator/balanced.py": "c56df10e26eab82c5980610c112a1cd593ba459df99bab971b80609ca3aba804",
+      "qldpc_generator/certificates.py": "88fa2dabf15b6876021e0e9a13c4ba04ee36341c391c88b41e027fbb756492e4",
+      "qldpc_generator/code.py": "f9a3e2c902d5b61a86764c273e7937f4534112d8ce701c0ce905fe72b2481266",
+      "qldpc_generator/constructions.py": "2e1b0a7f68ae3a4b6e8ce8786bd8a240dc71e2255cd24ae47a90411b482c4bb9",
+      "qldpc_generator/css.py": "213e352a44cde8263ab494726e433a77b0078c6aa00cfd3fcb19a125e6c23172",
+      "qldpc_generator/equivalences.py": "48efe5685bc22789e425882217b87628170491c92751d606f33a7a73e1ea4892",
+      "qldpc_generator/gf2.py": "1aae4610554a493a20e7c26cdf15e6d99610f071339cff63545ff5c9435d4569",
+      "qldpc_generator/gurobi_distance.py": "695cf767cb57ebb82113f3d397f0308a96128133d146d76fb5462c185fd3e72e",
+      "qldpc_generator/helper_func.py": "08c0d0323ce57bb837b37c8c0513f65bce4ea024c2504d34cdd98a5a4b30bf67",
+      "qldpc_generator/paper_cases.py": "31e29de48512617b027b317632f07898f6685781dae6976ac48b029fc744f397",
+      "qldpc_generator/representations.py": "6e47b605b0971e3ddb25ae53136f2cb5f729017bd2937a169ffc16e9263204f5",
+      "qldpc_generator/verify_paper.py": "b36bb579bcade22f52b46a17fb5c0ef4c51bacb1d266df6dbe3b606febe091ff"
+    },
+    "paper": {
+      "title": "An introduction to qLDPC codes from a structural perspective",
+      "authors": [
+        "Yuan Yao",
+        "Guo Zhang",
+        "Yingli Yang",
+        "Yuanye Zhu",
+        "Xiaosi Xu",
+        "Xiao Yuan",
+        "Ying Li"
+      ],
+      "status": "submitted",
+      "sha256": "09a2db27ae7e3d15404a0c1fa4e979d2c12857f5eae5d159c385e44f83188e93"
+    }
+  },
+  "cases": [
+    {
+      "id": "hgp13",
+      "paper_label": "sec:HGP",
+      "source": "tillich2014",
+      "parameters": {
+        "n": 13,
+        "k": 1,
+        "rank_x": 6,
+        "rank_z": 6,
+        "checks_x": 6,
+        "checks_z": 6,
+        "max_row_weight": 4,
+        "max_column_weight": 2
+      },
+      "algebra_verified": true,
+      "distance_claim": {
+        "kind": "exact_finite_claim",
+        "value": 3
+      },
+      "distance_computation": {
+        "status": "exact",
+        "lower_bound": 3,
+        "upper_bound": 3,
+        "sectors": {
+          "X": {
+            "status": "exact",
+            "lower_bound": 3,
+            "upper_bound": 3,
+            "witness": [
+              4,
+              5,
+              6
+            ],
+            "witness_source": "gurobi_incumbent",
+            "solver_status": "OPTIMAL",
+            "solver_bound": 3.0,
+            "runtime_seconds": 0.0069119930267333984,
+            "node_count": 1.0,
+            "solution_count": 1,
+            "variables": 21,
+            "constraints": 8,
+            "value": 3
+          },
+          "Z": {
+            "status": "exact",
+            "lower_bound": 3,
+            "upper_bound": 3,
+            "witness": [
+              4,
+              7,
+              10
+            ],
+            "witness_source": "gurobi_incumbent",
+            "solver_status": "OPTIMAL",
+            "solver_bound": 3.0,
+            "runtime_seconds": 0.0003349781036376953,
+            "node_count": 1.0,
+            "solution_count": 1,
+            "variables": 21,
+            "constraints": 8,
+            "value": 3
+          }
+        },
+        "value": 3,
+        "method": "gurobi",
+        "solver_version": "14.0.0",
+        "time_limit_per_sector": 10.0,
+        "threads": 1
+      },
+      "contradiction_found": false
+    },
+    {
+      "id": "lp544",
+      "paper_label": "app:lp-examples",
+      "source": "xu2024constant",
+      "parameters": {
+        "n": 544,
+        "k": 80,
+        "rank_x": 232,
+        "rank_z": 232,
+        "checks_x": 240,
+        "checks_z": 240,
+        "max_row_weight": 8,
+        "max_column_weight": 5
+      },
+      "algebra_verified": true,
+      "distance_claim": {
+        "kind": "reported_upper_bound",
+        "value": 12
+      },
+      "distance_computation": {
+        "status": "bounded",
+        "lower_bound": 2,
+        "upper_bound": 12,
+        "sectors": {
+          "X": {
+            "status": "bounded",
+            "lower_bound": 4,
+            "upper_bound": 12,
+            "witness": [
+              161,
+              163,
+              165,
+              184,
+              193,
+              201,
+              211,
+              214,
+              217,
+              229,
+              230,
+              232
+            ],
+            "witness_source": "gurobi_incumbent",
+            "solver_status": "TIME_LIMIT",
+            "solver_bound": 4.000000000000001,
+            "runtime_seconds": 10.001495122909546,
+            "node_count": 30459.0,
+            "solution_count": 6,
+            "variables": 944,
+            "constraints": 321
+          },
+          "Z": {
+            "status": "bounded",
+            "lower_bound": 2,
+            "upper_bound": 12,
+            "witness": [
+              26,
+              97,
+              100,
+              102,
+              104,
+              107,
+              177,
+              180,
+              262,
+              344,
+              346,
+              347
+            ],
+            "witness_source": "gurobi_incumbent",
+            "solver_status": "TIME_LIMIT",
+            "solver_bound": 2.0,
+            "runtime_seconds": 10.00026798248291,
+            "node_count": 7673.0,
+            "solution_count": 3,
+            "variables": 944,
+            "constraints": 321
+          }
+        },
+        "method": "gurobi",
+        "solver_version": "14.0.0",
+        "time_limit_per_sector": 10.0,
+        "threads": 1
+      },
+      "contradiction_found": false
+    },
+    {
+      "id": "lp714",
+      "paper_label": "app:lp-examples",
+      "source": "xu2024constant",
+      "parameters": {
+        "n": 714,
+        "k": 100,
+        "rank_x": 307,
+        "rank_z": 307,
+        "checks_x": 315,
+        "checks_z": 315,
+        "max_row_weight": 8,
+        "max_column_weight": 5
+      },
+      "algebra_verified": true,
+      "distance_claim": {
+        "kind": "reported_upper_bound",
+        "value": 16
+      },
+      "distance_computation": {
+        "status": "bounded",
+        "lower_bound": 2,
+        "upper_bound": 16,
+        "sectors": {
+          "X": {
+            "status": "bounded",
+            "lower_bound": 2,
+            "upper_bound": 16,
+            "witness": [
+              318,
+              323,
+              327,
+              336,
+              338,
+              339,
+              358,
+              374,
+              378,
+              379,
+              383,
+              390,
+              395,
+              401,
+              404,
+              407
+            ],
+            "witness_source": "gurobi_incumbent",
+            "solver_status": "TIME_LIMIT",
+            "solver_bound": 2.0,
+            "runtime_seconds": 10.00061297416687,
+            "node_count": 16873.0,
+            "solution_count": 7,
+            "variables": 1229,
+            "constraints": 416
+          },
+          "Z": {
+            "status": "bounded",
+            "lower_bound": 2,
+            "upper_bound": 16,
+            "witness": [
+              2,
+              10,
+              15,
+              19,
+              116,
+              124,
+              211,
+              213,
+              223,
+              225,
+              316,
+              318,
+              326,
+              328,
+              422,
+              430
+            ],
+            "witness_source": "gurobi_incumbent",
+            "solver_status": "TIME_LIMIT",
+            "solver_bound": 2.0,
+            "runtime_seconds": 10.000387907028198,
+            "node_count": 5849.0,
+            "solution_count": 3,
+            "variables": 1229,
+            "constraints": 416
+          }
+        },
+        "method": "gurobi",
+        "solver_version": "14.0.0",
+        "time_limit_per_sector": 10.0,
+        "threads": 1
+      },
+      "contradiction_found": false
+    },
+    {
+      "id": "lp1020",
+      "paper_label": "app:lp-examples",
+      "source": "xu2024constant",
+      "parameters": {
+        "n": 1020,
+        "k": 136,
+        "rank_x": 442,
+        "rank_z": 442,
+        "checks_x": 450,
+        "checks_z": 450,
+        "max_row_weight": 8,
+        "max_column_weight": 5
+      },
+      "algebra_verified": true,
+      "distance_claim": {
+        "kind": "reported_upper_bound",
+        "value": 20
+      },
+      "distance_computation": {
+        "status": "bounded",
+        "lower_bound": 1,
+        "upper_bound": 18,
+        "sectors": {
+          "X": {
+            "status": "bounded",
+            "lower_bound": 2,
+            "upper_bound": 18,
+            "witness": [
+              602,
+              603,
+              613,
+              619,
+              633,
+              643,
+              647,
+              662,
+              678,
+              679,
+              681,
+              708,
+              709,
+              710,
+              737,
+              739,
+              740,
+              741
+            ],
+            "witness_source": "gurobi_incumbent",
+            "solver_status": "TIME_LIMIT",
+            "solver_bound": 2.0,
+            "runtime_seconds": 10.000234127044678,
+            "node_count": 19828.0,
+            "solution_count": 4,
+            "variables": 1742,
+            "constraints": 587
+          },
+          "Z": {
+            "status": "bounded",
+            "lower_bound": 1,
+            "upper_bound": 24,
+            "witness": [
+              4,
+              13,
+              14,
+              18,
+              24,
+              27,
+              151,
+              152,
+              156,
+              161,
+              164,
+              168,
+              169,
+              300,
+              302,
+              304,
+              306,
+              311,
+              313,
+              319,
+              324,
+              450,
+              451,
+              477
+            ],
+            "witness_source": "gurobi_incumbent",
+            "solver_status": "TIME_LIMIT",
+            "solver_bound": 1.0000000000926972,
+            "runtime_seconds": 10.00649094581604,
+            "node_count": 571.0,
+            "solution_count": 1,
+            "variables": 1742,
+            "constraints": 587
+          }
+        },
+        "method": "gurobi",
+        "solver_version": "14.0.0",
+        "time_limit_per_sector": 10.0,
+        "threads": 1
+      },
+      "contradiction_found": false
+    },
+    {
+      "id": "lcs52",
+      "paper_label": "app:lcs-details",
+      "source": "old2024lift",
+      "parameters": {
+        "n": 52,
+        "k": 4,
+        "rank_x": 24,
+        "rank_z": 24,
+        "checks_x": 24,
+        "checks_z": 24,
+        "max_row_weight": 6,
+        "max_column_weight": 3
+      },
+      "algebra_verified": true,
+      "distance_claim": {
+        "kind": "exact_finite_claim",
+        "value": 4
+      },
+      "distance_computation": {
+        "status": "exact",
+        "lower_bound": 4,
+        "upper_bound": 4,
+        "sectors": {
+          "X": {
+            "status": "exact",
+            "lower_bound": 4,
+            "upper_bound": 4,
+            "witness": [
+              32,
+              33,
+              34,
+              35
+            ],
+            "witness_source": "gurobi_incumbent",
+            "solver_status": "OPTIMAL",
+            "solver_bound": 4.0,
+            "runtime_seconds": 0.0115509033203125,
+            "node_count": 72.0,
+            "solution_count": 2,
+            "variables": 84,
+            "constraints": 29,
+            "value": 4
+          },
+          "Z": {
+            "status": "exact",
+            "lower_bound": 4,
+            "upper_bound": 4,
+            "witness": [
+              32,
+              33,
+              34,
+              35
+            ],
+            "witness_source": "gurobi_incumbent",
+            "solver_status": "OPTIMAL",
+            "solver_bound": 4.0,
+            "runtime_seconds": 0.017654895782470703,
+            "node_count": 101.0,
+            "solution_count": 2,
+            "variables": 84,
+            "constraints": 29,
+            "value": 4
+          }
+        },
+        "value": 4,
+        "method": "gurobi",
+        "solver_version": "14.0.0",
+        "time_limit_per_sector": 10.0,
+        "threads": 1
+      },
+      "contradiction_found": false
+    },
+    {
+      "id": "bp90",
+      "paper_label": "app:bp-examples",
+      "source": "tiew2024lowoverheadentanglinggatesgeneralised",
+      "parameters": {
+        "n": 90,
+        "k": 8,
+        "rank_x": 41,
+        "rank_z": 41,
+        "checks_x": 45,
+        "checks_z": 45,
+        "max_row_weight": 6,
+        "max_column_weight": 3
+      },
+      "algebra_verified": true,
+      "distance_claim": {
+        "kind": "reported",
+        "value": 10
+      },
+      "distance_computation": {
+        "status": "exact",
+        "lower_bound": 10,
+        "upper_bound": 10,
+        "sectors": {
+          "X": {
+            "status": "exact",
+            "lower_bound": 10,
+            "upper_bound": 10,
+            "witness": [
+              1,
+              4,
+              7,
+              10,
+              13,
+              31,
+              34,
+              37,
+              40,
+              43
+            ],
+            "witness_source": "gurobi_incumbent",
+            "solver_status": "OPTIMAL",
+            "solver_bound": 10.0,
+            "runtime_seconds": 1.389692783355713,
+            "node_count": 9748.0,
+            "solution_count": 1,
+            "variables": 151,
+            "constraints": 54,
+            "value": 10
+          },
+          "Z": {
+            "status": "exact",
+            "lower_bound": 10,
+            "upper_bound": 10,
+            "witness": [
+              0,
+              1,
+              3,
+              4,
+              6,
+              7,
+              9,
+              10,
+              12,
+              13
+            ],
+            "witness_source": "gurobi_incumbent",
+            "solver_status": "OPTIMAL",
+            "solver_bound": 10.0,
+            "runtime_seconds": 2.7801690101623535,
+            "node_count": 12854.0,
+            "solution_count": 1,
+            "variables": 151,
+            "constraints": 54,
+            "value": 10
+          }
+        },
+        "value": 10,
+        "method": "gurobi",
+        "solver_version": "14.0.0",
+        "time_limit_per_sector": 10.0,
+        "threads": 1
+      },
+      "contradiction_found": false
+    },
+    {
+      "id": "bp108",
+      "paper_label": "app:bp-examples",
+      "source": "tiew2024lowoverheadentanglinggatesgeneralised",
+      "parameters": {
+        "n": 108,
+        "k": 8,
+        "rank_x": 50,
+        "rank_z": 50,
+        "checks_x": 54,
+        "checks_z": 54,
+        "max_row_weight": 6,
+        "max_column_weight": 3
+      },
+      "algebra_verified": true,
+      "distance_claim": {
+        "kind": "reported",
+        "value": 8
+      },
+      "distance_computation": {
+        "status": "exact",
+        "lower_bound": 8,
+        "upper_bound": 8,
+        "sectors": {
+          "X": {
+            "status": "exact",
+            "lower_bound": 8,
+            "upper_bound": 8,
+            "witness": [
+              19,
+              37,
+              54,
+              55,
+              90,
+              91,
+              105,
+              106
+            ],
+            "witness_source": "gurobi_incumbent",
+            "solver_status": "OPTIMAL",
+            "solver_bound": 8.0,
+            "runtime_seconds": 0.25813889503479004,
+            "node_count": 2343.0,
+            "solution_count": 3,
+            "variables": 178,
+            "constraints": 63,
+            "value": 8
+          },
+          "Z": {
+            "status": "exact",
+            "lower_bound": 8,
+            "upper_bound": 8,
+            "witness": [
+              0,
+              1,
+              3,
+              4,
+              36,
+              37,
+              54,
+              72
+            ],
+            "witness_source": "gurobi_incumbent",
+            "solver_status": "OPTIMAL",
+            "solver_bound": 8.0,
+            "runtime_seconds": 0.4818258285522461,
+            "node_count": 3878.0,
+            "solution_count": 1,
+            "variables": 178,
+            "constraints": 63,
+            "value": 8
+          }
+        },
+        "value": 8,
+        "method": "gurobi",
+        "solver_version": "14.0.0",
+        "time_limit_per_sector": 10.0,
+        "threads": 1
+      },
+      "contradiction_found": false
+    },
+    {
+      "id": "bicycle6",
+      "paper_label": "sec:BB",
+      "source": "mackay2004sparse",
+      "parameters": {
+        "n": 6,
+        "k": 2,
+        "rank_x": 2,
+        "rank_z": 2,
+        "checks_x": 3,
+        "checks_z": 3,
+        "max_row_weight": 4,
+        "max_column_weight": 2
+      },
+      "algebra_verified": true,
+      "distance_claim": {
+        "kind": "exact_finite_claim",
+        "value": 2
+      },
+      "distance_computation": {
+        "status": "exact",
+        "lower_bound": 2,
+        "upper_bound": 2,
+        "sectors": {
+          "X": {
+            "status": "exact",
+            "lower_bound": 2,
+            "upper_bound": 2,
+            "witness": [
+              2,
+              3
+            ],
+            "witness_source": "gurobi_incumbent",
+            "solver_status": "OPTIMAL",
+            "solver_bound": 2.0,
+            "runtime_seconds": 0.0006229877471923828,
+            "node_count": 1.0,
+            "solution_count": 2,
+            "variables": 13,
+            "constraints": 6,
+            "value": 2
+          },
+          "Z": {
+            "status": "exact",
+            "lower_bound": 2,
+            "upper_bound": 2,
+            "witness": [
+              2,
+              3
+            ],
+            "witness_source": "gurobi_incumbent",
+            "solver_status": "OPTIMAL",
+            "solver_bound": 2.0,
+            "runtime_seconds": 0.0005180835723876953,
+            "node_count": 1.0,
+            "solution_count": 2,
+            "variables": 13,
+            "constraints": 6,
+            "value": 2
+          }
+        },
+        "value": 2,
+        "method": "gurobi",
+        "solver_version": "14.0.0",
+        "time_limit_per_sector": 10.0,
+        "threads": 1
+      },
+      "contradiction_found": false
+    },
+    {
+      "id": "gb48",
+      "paper_label": "sec:BB",
+      "source": "panteleev2021degenerate",
+      "parameters": {
+        "n": 48,
+        "k": 6,
+        "rank_x": 21,
+        "rank_z": 21,
+        "checks_x": 24,
+        "checks_z": 24,
+        "max_row_weight": 8,
+        "max_column_weight": 4
+      },
+      "algebra_verified": true,
+      "distance_claim": {
+        "kind": "reported",
+        "value": 8
+      },
+      "distance_computation": {
+        "status": "exact",
+        "lower_bound": 8,
+        "upper_bound": 8,
+        "sectors": {
+          "X": {
+            "status": "exact",
+            "lower_bound": 8,
+            "upper_bound": 8,
+            "witness": [
+              2,
+              5,
+              8,
+              11,
+              14,
+              17,
+              20,
+              23
+            ],
+            "witness_source": "gurobi_incumbent",
+            "solver_status": "OPTIMAL",
+            "solver_bound": 8.0,
+            "runtime_seconds": 0.6154241561889648,
+            "node_count": 9448.0,
+            "solution_count": 1,
+            "variables": 84,
+            "constraints": 31,
+            "value": 8
+          },
+          "Z": {
+            "status": "exact",
+            "lower_bound": 8,
+            "upper_bound": 8,
+            "witness": [
+              0,
+              3,
+              6,
+              9,
+              12,
+              15,
+              18,
+              21
+            ],
+            "witness_source": "gurobi_incumbent",
+            "solver_status": "OPTIMAL",
+            "solver_bound": 8.0,
+            "runtime_seconds": 0.6098790168762207,
+            "node_count": 9593.0,
+            "solution_count": 1,
+            "variables": 84,
+            "constraints": 31,
+            "value": 8
+          }
+        },
+        "value": 8,
+        "method": "gurobi",
+        "solver_version": "14.0.0",
+        "time_limit_per_sector": 10.0,
+        "threads": 1
+      },
+      "contradiction_found": false
+    },
+    {
+      "id": "bb72",
+      "paper_label": "eq:bb-logical-qubit-quotient",
+      "source": "bravyi2024high",
+      "parameters": {
+        "n": 72,
+        "k": 12,
+        "rank_x": 30,
+        "rank_z": 30,
+        "checks_x": 36,
+        "checks_z": 36,
+        "max_row_weight": 6,
+        "max_column_weight": 3
+      },
+      "algebra_verified": true,
+      "distance_claim": {
+        "kind": "reported",
+        "value": 6
+      },
+      "distance_computation": {
+        "status": "exact",
+        "lower_bound": 6,
+        "upper_bound": 6,
+        "sectors": {
+          "X": {
+            "status": "exact",
+            "lower_bound": 6,
+            "upper_bound": 6,
+            "witness": [
+              9,
+              15,
+              18,
+              21,
+              27,
+              30
+            ],
+            "witness_source": "gurobi_incumbent",
+            "solver_status": "OPTIMAL",
+            "solver_bound": 6.0,
+            "runtime_seconds": 0.03729510307312012,
+            "node_count": 311.0,
+            "solution_count": 2,
+            "variables": 132,
+            "constraints": 49,
+            "value": 6
+          },
+          "Z": {
+            "status": "exact",
+            "lower_bound": 6,
+            "upper_bound": 6,
+            "witness": [
+              1,
+              2,
+              3,
+              4,
+              18,
+              20
+            ],
+            "witness_source": "gurobi_incumbent",
+            "solver_status": "OPTIMAL",
+            "solver_bound": 6.0,
+            "runtime_seconds": 0.10885095596313477,
+            "node_count": 721.0,
+            "solution_count": 1,
+            "variables": 132,
+            "constraints": 49,
+            "value": 6
+          }
+        },
+        "value": 6,
+        "method": "gurobi",
+        "solver_version": "14.0.0",
+        "time_limit_per_sector": 10.0,
+        "threads": 1
+      },
+      "contradiction_found": false
+    },
+    {
+      "id": "bb144",
+      "paper_label": "eq:fg",
+      "source": "bravyi2024high",
+      "parameters": {
+        "n": 144,
+        "k": 12,
+        "rank_x": 66,
+        "rank_z": 66,
+        "checks_x": 72,
+        "checks_z": 72,
+        "max_row_weight": 6,
+        "max_column_weight": 3
+      },
+      "algebra_verified": true,
+      "distance_claim": {
+        "kind": "reported",
+        "value": 12
+      },
+      "distance_computation": {
+        "status": "bounded",
+        "lower_bound": 7,
+        "upper_bound": 12,
+        "sectors": {
+          "X": {
+            "status": "bounded",
+            "lower_bound": 7,
+            "upper_bound": 12,
+            "witness": [
+              8,
+              10,
+              24,
+              25,
+              26,
+              27,
+              44,
+              46,
+              60,
+              61,
+              62,
+              63
+            ],
+            "witness_source": "gurobi_incumbent",
+            "solver_status": "TIME_LIMIT",
+            "solver_bound": 7.0,
+            "runtime_seconds": 10.020493030548096,
+            "node_count": 82635.0,
+            "solution_count": 2,
+            "variables": 240,
+            "constraints": 85
+          },
+          "Z": {
+            "status": "bounded",
+            "lower_bound": 7,
+            "upper_bound": 12,
+            "witness": [
+              3,
+              6,
+              12,
+              15,
+              18,
+              24,
+              39,
+              42,
+              48,
+              51,
+              54,
+              60
+            ],
+            "witness_source": "gurobi_incumbent",
+            "solver_status": "TIME_LIMIT",
+            "solver_bound": 7.0,
+            "runtime_seconds": 10.000156879425049,
+            "node_count": 123531.0,
+            "solution_count": 1,
+            "variables": 240,
+            "constraints": 85
+          }
+        },
+        "method": "gurobi",
+        "solver_version": "14.0.0",
+        "time_limit_per_sector": 10.0,
+        "threads": 1
+      },
+      "contradiction_found": false
+    },
+    {
+      "id": "mitten150",
+      "paper_label": "eq:mitten-regular-checks",
+      "source": "bhardwaj2026highrate",
+      "parameters": {
+        "n": 150,
+        "k": 30,
+        "rank_x": 60,
+        "rank_z": 60,
+        "checks_x": 60,
+        "checks_z": 60,
+        "max_row_weight": 9,
+        "max_column_weight": 6
+      },
+      "algebra_verified": true,
+      "distance_claim": {
+        "kind": "reported",
+        "value": 10
+      },
+      "distance_computation": {
+        "status": "bounded",
+        "lower_bound": 5,
+        "upper_bound": 10,
+        "sectors": {
+          "X": {
+            "status": "bounded",
+            "lower_bound": 6,
+            "upper_bound": 10,
+            "witness": [
+              67,
+              74,
+              80,
+              81,
+              83,
+              85,
+              100,
+              101,
+              113,
+              115
+            ],
+            "witness_source": "gurobi_incumbent",
+            "solver_status": "TIME_LIMIT",
+            "solver_bound": 6.0,
+            "runtime_seconds": 10.000725984573364,
+            "node_count": 25803.0,
+            "solution_count": 2,
+            "variables": 270,
+            "constraints": 91
+          },
+          "Z": {
+            "status": "bounded",
+            "lower_bound": 5,
+            "upper_bound": 10,
+            "witness": [
+              0,
+              5,
+              6,
+              7,
+              14,
+              16,
+              18,
+              26,
+              60,
+              72
+            ],
+            "witness_source": "gurobi_incumbent",
+            "solver_status": "TIME_LIMIT",
+            "solver_bound": 5.000000000000001,
+            "runtime_seconds": 10.00012493133545,
+            "node_count": 18115.0,
+            "solution_count": 1,
+            "variables": 270,
+            "constraints": 91
+          }
+        },
+        "method": "gurobi",
+        "solver_version": "14.0.0",
+        "time_limit_per_sector": 10.0,
+        "threads": 1
+      },
+      "contradiction_found": false
+    }
+  ],
+  "relations": {
+    "lp_bp_C2": true,
+    "lp_bp_C4": true,
+    "lp_bp_S3": true,
+    "fb_bp_S3_nonfree_fiber": true,
+    "bb_direct_sum_t3": true,
+    "bb144_quotient_dimension": true,
+    "bb144_generalized_toric": true,
+    "hgp_distance_quotient_witness": true,
+    "classical_path_star_soundness": true
+  },
+  "configuration": {
+    "distance_method": "gurobi",
+    "distance_enabled": true,
+    "time_limit_per_sector": 10.0,
+    "threads": 1,
+    "case_ids": [
+      "hgp13",
+      "lp544",
+      "lp714",
+      "lp1020",
+      "lcs52",
+      "bp90",
+      "bp108",
+      "bicycle6",
+      "gb48",
+      "bb72",
+      "bb144",
+      "mitten150"
+    ]
+  },
+  "passed": true,
+  "meaning_of_passed": "All requested solver runs were available and executed algebra/certificate checks passed; bounded, reported, or not_searched distances are not certified exact.",
+  "unresolved_inputs": [
+    {
+      "claim": "GB [[126,28,8]]",
+      "reason": "Paper mentions parameters but does not specify its two polynomials."
+    },
+    {
+      "claim": "Planar [[88,6,6]] and tile [[288,8,12]], [[512,18,19]]",
+      "reason": "Full open-boundary check data are not supplied in this manuscript; periodic templates do not determine them."
+    }
+  ],
+  "outside_finite_validation": [
+    "General asymptotic rate/distance theorems",
+    "General LCS distance conjecture",
+    "Decoder thresholds and single-shot guarantees",
+    "Hardware experimental results"
+  ]
+}

@@ -12,6 +12,7 @@ dependencies = ["numpy>=1.24", "sympy>=1.12"]
 [project.optional-dependencies]
 test = ["pytest>=7"]
 notebooks = ["nbformat>=5", "nbclient>=0.10", "ipykernel>=6"]
+gurobi = ["gurobipy>=12"]
 
 [tool.setuptools.packages.find]
 include = ["qldpc_generator*"]

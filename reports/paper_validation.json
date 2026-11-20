@@ -1,10 +1,10 @@
 {
   "provenance": {
-    "generated_at": "2026-11-09T09:46:47.067947+00:00",
+    "generated_at": "2026-11-20T06:41:13.925206+00:00",
     "python": "3.14.3",
     "numpy": "2.5.4",
     "sympy": "1.14.0",
-    "git_head": "058c93755b61efee86386d00f47dbe325fbdb70d",
+    "git_head": "e3c5a9051bbe0134aeb84d45fb8ff8947daee75c",
     "working_tree_dirty": true,
     "source_sha256": {
       "qldpc_generator/__init__.py": "c1899d1366e968f3a49cb33988fb3a7e51bbdc74c4400b116c83b49e0b2dff82",
@@ -13,13 +13,14 @@
       "qldpc_generator/certificates.py": "88fa2dabf15b6876021e0e9a13c4ba04ee36341c391c88b41e027fbb756492e4",
       "qldpc_generator/code.py": "f9a3e2c902d5b61a86764c273e7937f4534112d8ce701c0ce905fe72b2481266",
       "qldpc_generator/constructions.py": "2e1b0a7f68ae3a4b6e8ce8786bd8a240dc71e2255cd24ae47a90411b482c4bb9",
-      "qldpc_generator/css.py": "423c0b604009cd33dc1dbed19c9a9153699657d206b036389323608326287266",
+      "qldpc_generator/css.py": "213e352a44cde8263ab494726e433a77b0078c6aa00cfd3fcb19a125e6c23172",
       "qldpc_generator/equivalences.py": "48efe5685bc22789e425882217b87628170491c92751d606f33a7a73e1ea4892",
       "qldpc_generator/gf2.py": "1aae4610554a493a20e7c26cdf15e6d99610f071339cff63545ff5c9435d4569",
+      "qldpc_generator/gurobi_distance.py": "695cf767cb57ebb82113f3d397f0308a96128133d146d76fb5462c185fd3e72e",
       "qldpc_generator/helper_func.py": "08c0d0323ce57bb837b37c8c0513f65bce4ea024c2504d34cdd98a5a4b30bf67",
       "qldpc_generator/paper_cases.py": "31e29de48512617b027b317632f07898f6685781dae6976ac48b029fc744f397",
       "qldpc_generator/representations.py": "6e47b605b0971e3ddb25ae53136f2cb5f729017bd2937a169ffc16e9263204f5",
-      "qldpc_generator/verify_paper.py": "77a4bcf7f2d2d290fc5b03f190a6ede0aac7e1e19ed84b92bff54c3bbcdc292b"
+      "qldpc_generator/verify_paper.py": "b36bb579bcade22f52b46a17fb5c0ef4c51bacb1d266df6dbe3b606febe091ff"
     },
     "paper": {
       "title": "An introduction to qLDPC codes from a structural perspective",
@@ -550,8 +551,28 @@
     "hgp_distance_quotient_witness": true,
     "classical_path_star_soundness": true
   },
+  "configuration": {
+    "distance_method": "mitm",
+    "distance_enabled": true,
+    "time_limit_per_sector": null,
+    "threads": null,
+    "case_ids": [
+      "hgp13",
+      "lp544",
+      "lp714",
+      "lp1020",
+      "lcs52",
+      "bp90",
+      "bp108",
+      "bicycle6",
+      "gb48",
+      "bb72",
+      "bb144",
+      "mitten150"
+    ]
+  },
   "passed": true,
-  "meaning_of_passed": "All executed algebra/certificate checks passed; reported or not_searched distance claims are not certified.",
+  "meaning_of_passed": "All requested solver runs were available and executed algebra/certificate checks passed; bounded, reported, or not_searched distances are not certified exact.",
   "unresolved_inputs": [
     {
       "claim": "GB [[126,28,8]]",

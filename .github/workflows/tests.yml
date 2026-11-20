@@ -21,3 +21,22 @@ jobs:
           path: |
             reports/ci_validation.json
             notebooks/*.ipynb
+  gurobi:
+    runs-on: ubuntu-latest
+    env:
+      QLDPC_REQUIRE_GUROBI: '1'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - run: python -m pip install -e '.[test,notebooks,gurobi]'
+      - run: python -m pytest -q tests/test_gurobi_distance.py
+      - run: python -m qldpc_generator.verify_paper --distance-method gurobi --cases hgp13 bicycle6 --time-limit 10 --output reports/gurobi_ci.json
+      - run: python scripts/execute_notebooks.py
+      - uses: actions/upload-artifact@v4
+        with:
+          name: gurobi-validation
+          path: |
+            reports/gurobi_ci.json
+            notebooks/07-gurobi-distance.ipynb
